@@ -1,23 +1,30 @@
 <app-header></app-header>
-<h3 class="text-2xl">Product in Stock</h3>
-<section class="flex justify-evenly p-1">
+<h1 class="text-2xl text-center">Product in Stock</h1>
+<section class="flex justify-evenly p-1 mt-5">
   @for (product of productService.products; track $index) {
-  <mat-card class="grid grid-cols-2 gap-2 max-w-100">
+  <mat-card class="grid grid-cols-2 gap-2 max-w-100 max-h-110">
     <mat-card-header class="flex flex-row justify-between">
       <div mat-card-avatar class="product-avatar"></div>
       <mat-card-title>{{ product.name }}</mat-card-title>
-      <mat-card-subtitle>💵{{product.price}}</mat-card-subtitle
-      >
+      <mat-card-subtitle>💵{{ product.price }}</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="{{ product.image }}" alt="Image Product" />
+    <img
+      mat-card-image
+      src="{{ product.image }}"
+      alt="Image Product"
+      class="mx-auto w-100 h-60"
+    />
     <mat-card-content>
       <p>
         {{ product.description }}
       </p>
     </mat-card-content>
     <mat-card-actions class="flex justify-between">
-      <button mat-flat-button class="custom-mat-flat-button">Edit Product</button>
-      <button mat-flat-button class="custom-mat-flat-button">Delete Product</button>
+      <a routerLink="{{product.id}}" class="bg-gray-700 text-white rounded-full px-4 py-2 font-medium">Edit Product</a>
+
+      <button class="bg-red-500 text-white rounded-full px-4 py-2 font-medium" >
+        Delete Product
+      </button>
     </mat-card-actions>
   </mat-card>
 

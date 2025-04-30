@@ -1,1 +1,32 @@
-<p>product-detail works!</p>
+<app-header></app-header>
+@if(selectedProduct.id){
+<mat-card class="max-w-4xl mb-8 justify-between mx-auto mt-10" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title>{{ selectedProduct.name }}</mat-card-title>
+      <mat-card-subtitle>💵{{ selectedProduct.price }}</mat-card-subtitle>
+      <img
+        src="{{ selectedProduct.image }}"
+        alt="Image Product"
+        class="rounded-full h-50 w-50 object-cover shadow-md"
+      />
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content>
+    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deleniti odio
+    voluptatum, repellendus eius molestias sit quibusdam laborum veritatis
+    accusantium eaque reprehenderit voluptate voluptates exercitationem fugit
+    voluptatem fuga perspiciatis debitis, asperiores sunt cupiditate molestiae
+    suscipit, praesentium dolore. Necessitatibus dolorem similique minima,
+    repellendus assumenda impedit maxime dolorum rerum! Voluptatum expedita
+    blanditiis qui distinctio, architecto cupiditate deleniti incidunt soluta
+    eos laboriosam molestiae est sed quam porro rem quo magni nesciunt vitae
+    accusantium, dolorem iste consequatur iusto. Alias repellat, culpa error
+    deleniti quae ipsum earum, harum doloribus praesentium temporibus nisi nulla
+    fugiat sunt recusandae porro dolores, ex ea molestias minima tempore
+    distinctio excepturi? Deserunt!
+  </mat-card-content>
+</mat-card>
+}@else {
+<h2 class="text-3xl font-bold font-serif">No hay productos en stock aún</h2>
+}
