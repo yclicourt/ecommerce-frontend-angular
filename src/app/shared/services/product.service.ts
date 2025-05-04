@@ -14,11 +14,19 @@ export class ProductService {
     this.products = [];
   }
 
+  createProduct(product: Product) {
+    return this.http.post<Product>(this.API_URL, product);
+  }
+  
   getAllProducts() {
     return this.http.get<Product[]>(this.API_URL);
   }
 
   getProduct(id: number) {
     return this.http.get<Product>(`${this.API_URL}/${id}`);
+  }
+
+  deleteProduct(id: number) {
+    return this.http.delete<Product>(`${this.API_URL}/${id}`);
   }
 }
