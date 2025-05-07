@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Usuario } from '../../auth/interfaces/register.interface';
-import { Observable, tap } from 'rxjs';
+import { Role, Usuario } from '../../auth/interfaces/register.interface';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Login } from '../../auth/interfaces/login.interface';
 import { ResponseAccess } from '../../auth/interfaces/responseAccess.interface';
 import { Router } from '@angular/router';
@@ -14,6 +14,17 @@ export class UserService {
   private tokenKey = 'tokenKey';
   private http = inject(HttpClient);
   private router = inject(Router);
+
+  private currentUserSubject: BehaviorSubject<Usuario>;
+  public currentUser: Observable<Usuario>;
+  userRole!: Usuario;
+
+  constructor() {
+    this.currentUserSubject = new BehaviorSubject<Usuario>(
+      JSON.parse(localStorage.getItem('currentUser') || '{}')
+    );
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
 
   registerUser(registerUser: Usuario): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.API_URL}/register`, registerUser);
@@ -30,10 +41,23 @@ export class UserService {
         })
       );
   }
+
+  hasRole(): boolean {
+    const user = this.currentUserValue;
+    if (user.role == Role.ADMIN) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  public get currentUserValue() {
+    return this.currentUserSubject.value;
+  }
+
   private setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
-  private getToken(): string | null {
+  getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
   isAuthenticated(): boolean {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,6 +7,9 @@ import {
 } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../services/user.service';
+import { Role, Usuario } from '../../../auth/interfaces/register.interface';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-form',
@@ -22,10 +25,12 @@ export class ProductFormComponent implements OnInit {
   price: FormControl;
   image: FormControl;
 
-  constructor(
-    public productService: ProductService,
-    private toastr: ToastrService
-  ) {
+  
+  public productService = inject(ProductService);
+  private toastr = inject(ToastrService);
+  private userService = inject(UserService);
+
+  constructor() {
     this.name = new FormControl('', Validators.required);
     this.description = new FormControl('', Validators.required);
     this.price = new FormControl('', Validators.required);
@@ -44,13 +49,35 @@ export class ProductFormComponent implements OnInit {
   }
 
   createProduct() {
-    this.productService.createProduct(this.productForm.value).subscribe({
+    // Verify if user is autenticated
+    if (!this.userService.isAuthenticated()) {
+      this.toastr.error('You need a session to create products');
+      return;
+    }
+
+    // Verify rol user
+    if (!this.userService.hasRole()) {
+      this.toastr.error('Need privileges to complete this action');
+      return;
+    }
+
+    // Getting token
+    const token = this.userService.getToken();
+    this.productService.createProduct(this.productForm.value,token).subscribe({
       next: (data) => {
         this.toastr.success('Product added successfully');
         this.getProducts();
       },
-      error: (e) => {
-        console.log(e);
+      error: (e: HttpErrorResponse) => {
+        if (e.status == 401) {
+          this.toastr.error('Session Expired, please init session again');
+          this.userService.logout();
+        } else if (e.status == 403) {
+          this.toastr.error('Forbbiden');
+        } else {
+          console.log(e);
+          this.toastr.error('Error to create product');
+        }
       },
     });
     this.productForm.reset();
