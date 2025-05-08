@@ -7,9 +7,15 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuard } from './core/guard/auth.guard';
 import { AuthenticatedGuard } from './core/guard/authenticated.guard';
+import { AdminGuard } from './core/guard/admin-guard.guard';
+import { Role } from './auth/interfaces/role.enum';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    component: HomeComponent,
+    data: { roles: [Role.ADMIN, Role.GUEST, Role.MANAGER, Role.USER] },
+  },
   {
     path: 'login',
     component: LoginComponent,
@@ -20,12 +26,19 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
+    data: { roles: [Role.ADMIN, Role.MANAGER] },
   },
-  { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'products',
+    component: ProductsComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.ADMIN, Role.MANAGER] },
+  },
   {
     path: 'products/:id',
     component: ProductDetailComponent,
     canActivate: [AuthGuard],
+    data: { roles: [Role.ADMIN, Role.MANAGER] },
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

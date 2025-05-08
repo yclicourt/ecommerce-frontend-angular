@@ -1,13 +1,11 @@
+import { Role } from './role.enum';
+
 export interface Usuario {
   name: string;
   lastname: string;
   email: string;
   password: string;
   address: string;
-  role: Role;
+  role: Role[];
 }
-
-export enum Role {
-  ADMIN,
-  USER,
-}
+export { Role };

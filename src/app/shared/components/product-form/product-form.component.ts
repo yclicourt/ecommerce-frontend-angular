@@ -56,7 +56,7 @@ export class ProductFormComponent implements OnInit {
     }
 
     // Verify rol user
-    if (!this.userService.hasRole()) {
+    if (!this.userService.getCurrentUserRole()) {
       this.toastr.error('Need privileges to complete this action');
       return;
     }
