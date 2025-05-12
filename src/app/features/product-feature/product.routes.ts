@@ -4,13 +4,13 @@ import { AuthGuard } from 'src/app/core/guard/auth.guard';
 
 const productRoutes: Routes = [
   {
-    path: 'products',
+    path: '',
     loadComponent: () =>
       import('./products/products.component').then((m) => m.ProductsComponent),
     canActivate: [AuthGuard, AdminGuard],
   },
   {
-    path: 'products/:id',
+    path: ':id',
     loadComponent: () =>
       import('./product-detail/product-detail.component').then(
         (m) => m.ProductDetailComponent

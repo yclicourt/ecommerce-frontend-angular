@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { UserService } from '../../../shared/services/user.service';
+import { UserService } from '@shared/services/user.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';

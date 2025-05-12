@@ -44,7 +44,7 @@ const redirectBasedOnRole = (role: Role) => {
   const router = inject(Router)
   const routes = {
     [Role.ADMIN]: '**',
-    [Role.USER]: '',
+    [Role.USER]: 'user/dashboard',
   };
 
   router.navigate([routes[role] || 'login']);

@@ -14,7 +14,7 @@ import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,NgClass],
+  imports: [ReactiveFormsModule, NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -45,6 +45,9 @@ export class LoginComponent {
     this.accessForm.reset();
   }
 
+  register() {
+    this.router.navigate(['register']);
+  }
   hasErrors(field: string, typeError: string) {
     return (
       this.accessForm.get(field)?.hasError(typeError) &&
