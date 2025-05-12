@@ -1,27 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Usuario } from '@features/auth/interfaces/register.interface';
 import { UserService } from '@shared/services/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Usuario } from '@features/auth/interfaces/register.interface';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-dashboard-admin',
   standalone: true,
   imports: [],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  templateUrl: './dashboard-admin.component.html',
+  styleUrl: './dashboard-admin.component.css',
 })
-export class HeaderComponent implements OnInit {
-  userService = inject(UserService);
+export class DashboardAdminComponent {
+  public userService = inject(UserService);
+  route = inject(ActivatedRoute);
   router = inject(Router);
   selectedProfile!: Usuario;
-
-  ngOnInit(): void {
-    console.log(this.userService.getCurrentUserRole());
-  }
 
   logout(): void {
     this.userService.logout();
   }
+
 
   getProfile(id: number) {
     this.userService.getUser(id).subscribe({

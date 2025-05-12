@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Usuario } from '../../auth/interfaces/register.interface';
+import { Usuario } from '../../features/auth/interfaces/register.interface';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Login } from '../../auth/interfaces/login.interface';
-import { ResponseAccess } from '../../auth/interfaces/responseAccess.interface';
+import { Login } from '../../features/auth/interfaces/login.interface';
+import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.interface';
 import { Router } from '@angular/router';
-import { Role } from '../../auth/interfaces/role.enum';
+import { Role } from '../../features/auth/interfaces/role.enum';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private readonly API_URL = 'http://localhost:4000/api/v1/auth';
+  private readonly API_URL = 'http://localhost:4000/api/v1';
   private tokenKey = 'tokenKey';
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -20,6 +20,8 @@ export class UserService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<Usuario>;
   private jwtHelper = new JwtHelperService();
+
+  users: Usuario[] = [];
 
   constructor() {
     this.currentUserSubject = new BehaviorSubject<Usuario>(
@@ -29,15 +31,19 @@ export class UserService {
   }
 
   registerUser(registerUser: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.API_URL}/register`, registerUser);
+    return this.http.post<Usuario>(
+      `${this.API_URL}/auth/register`,
+      registerUser
+    );
   }
   loginUser(loginUser: Login): Observable<ResponseAccess> {
     return this.http
-      .post<ResponseAccess>(`${this.API_URL}/login`, loginUser)
+      .post<ResponseAccess>(`${this.API_URL}/auth/login`, loginUser)
       .pipe(
         tap((response) => {
           if (response.token) {
             this.setToken(response.token);
+
           }
         })
       );
@@ -46,16 +52,20 @@ export class UserService {
     return this.currentUserSubject.value;
   }
 
+  getUser(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.API_URL}/users/${id}`);
+  }
+
   getCurrentUserRole(): Role {
     const token = this.getToken();
-    if (!token) return Role.GUEST;
+    if (!token) return Role.USER;
 
     try {
       const decodedToken = this.jwtHelper.decodeToken(token);
-      return decodedToken.role || Role.GUEST;
+      return decodedToken.role || Role.USER;
     } catch (e) {
       console.error('Error decoding token', e);
-      return Role.GUEST;
+      return Role.USER;
     }
   }
 

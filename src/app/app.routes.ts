@@ -1,44 +1,48 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { ProductsComponent } from './pages/products/products.component';
-import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
+import { ProductsComponent } from './features/product-feature/products/products.component';
+import { ProductDetailComponent } from './features/product-feature/product-detail/product-detail.component';
 import { AuthGuard } from './core/guard/auth.guard';
 import { AuthenticatedGuard } from './core/guard/authenticated.guard';
 import { AdminGuard } from './core/guard/admin-guard.guard';
-import { Role } from './auth/interfaces/role.enum';
+import { Role } from '../app/features/auth/interfaces/role.enum';
+import { DashboardAdminComponent } from './pages/dashboard-admin/dashboard-admin.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    data: { roles: [Role.ADMIN, Role.GUEST, Role.MANAGER, Role.USER] },
+    data: { roles: [Role.ADMIN, Role.USER] },
   },
   {
-    path: 'login',
-    component: LoginComponent,
-    canActivate: [AuthenticatedGuard],
+    path: 'products',
+    loadChildren: () => import('./features/product-feature/product.routes'),
   },
-  { path: 'register', component: RegisterComponent },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
+    path: 'auth',
+    loadChildren: () => import('./features/auth/auth.routes'),
+  },
+  {
+    path: 'profile/:id',
+    component: ProfileComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Role.ADMIN, Role.MANAGER] },
+    data: { roles: [Role.ADMIN, Role.USER] },
+  },
+  {
+    path: 'admin/dashboard',
+    component: DashboardAdminComponent,
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: 'products',
     component: ProductsComponent,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.ADMIN, Role.MANAGER] },
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: 'products/:id',
     component: ProductDetailComponent,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.ADMIN, Role.MANAGER] },
+    canActivate: [AuthGuard, AdminGuard],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

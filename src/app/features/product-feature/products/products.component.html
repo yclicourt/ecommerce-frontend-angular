@@ -1,0 +1,41 @@
+<app-header-product></app-header-product>
+<h1 class="text-2xl text-center font-mono">Product in stock</h1>
+<section class="flex justify-evenly mt-5">
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-2">
+    @for (product of productService.products; track $index) {
+    <mat-card>
+      <mat-card-header class="flex flex-row justify-between" routerLink="{{ product.id }}">
+        <div mat-card-avatar class="product-avatar"></div>
+        <mat-card-title>{{ product.name }}</mat-card-title>
+        <mat-card-subtitle>💵{{ product.price }}</mat-card-subtitle>
+      </mat-card-header>
+      <img
+        mat-card-image
+        src="{{ product.image }}"
+        alt="Image Product"
+        class="mx-auto w-100 h-60"
+      />
+      <mat-card-content>
+        <p>
+          {{ product.description }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions class="flex justify-between">
+        <a
+          class="bg-gray-700 text-white rounded-full px-4 py-2 font-medium"
+          >Add Cart</a
+        >
+
+        <button
+          class="bg-red-500 text-white rounded-full px-4 py-2 font-medium"
+          (click)="deleteProduct(product.id)"
+        >
+          Delete Product
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+
+  <app-product-form></app-product-form>
+</section>

@@ -1,11 +1,13 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { UserService } from '../../shared/services/user.service';
-import { Role } from '../../auth/interfaces/role.enum';
+import { UserService } from '@shared/services/user.service';
+import { Role } from '@features/auth/interfaces/role.enum';
 
-const router = inject(Router);
+
 export const AdminGuard: CanActivateFn = (route, state) => {
   const userService = inject(UserService);
+
+  const router = inject(Router);
 
   // Check if the user is authenticated
   if (!userService.isAuthenticated()) {
@@ -38,11 +40,11 @@ export const AdminGuard: CanActivateFn = (route, state) => {
 
 
 const redirectBasedOnRole = (role: Role) => {
+
+  const router = inject(Router)
   const routes = {
     [Role.ADMIN]: '**',
-    [Role.MANAGER]: 'dashboard',
     [Role.USER]: '',
-    [Role.GUEST]: '',
   };
 
   router.navigate([routes[role] || 'login']);

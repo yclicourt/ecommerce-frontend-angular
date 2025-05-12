@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { SpinnerService } from '../services/spinner.service';
+import { SpinnerService } from '@shared/services/spinner.service';
 import { finalize } from 'rxjs';
 import { HttpInterceptorFn } from '@angular/common/http';
 
