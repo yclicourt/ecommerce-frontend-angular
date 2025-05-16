@@ -9,6 +9,6 @@ export interface Usuario {
   address: string;
   phone: number;
   createdAt: Date;
-  role: Role[];
+  role?: Role[];
 }
 export { Role };

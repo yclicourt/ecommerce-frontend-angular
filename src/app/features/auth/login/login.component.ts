@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { NgClass } from '@angular/common';
 export class LoginComponent {
   private router = inject(Router);
   private userService = inject(UserService);
+  private toastr = inject(ToastrService);
 
   accessForm!: FormGroup;
 
@@ -37,12 +39,23 @@ export class LoginComponent {
   }
   login(): void {
     this.userService.loginUser(this.accessForm.value).subscribe({
-      next: () => this.router.navigate(['home']),
-      error: (error: HttpErrorResponse) => {
-        console.error('Login Error', error.error.message);
+      next: (response) => {
+        if (response) {
+          this.accessForm.reset();
+          this.router.navigate(['/home']);
+        }
+      },
+      error: (error) => {
+        const errorMessage =
+          error.error?.message || error.message || 'Login Error';
+
+        console.error('Login Error:', error);
+        this.toastr.error(errorMessage);
+      },
+      complete: () => {
+        this.accessForm.reset();
       },
     });
-    this.accessForm.reset();
   }
 
   register() {

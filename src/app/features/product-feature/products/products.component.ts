@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { HeaderProduct } from '@shared/common/components/header-products/header-products.component';
+import { UserService } from '@shared/services/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-products',
@@ -31,11 +33,11 @@ import { HeaderProduct } from '@shared/common/components/header-products/header-
 })
 export class ProductsComponent implements OnInit {
   selectedProduct: Product;
+  private toastr = inject(ToastrService);
+  private userService = inject(UserService);
+  productService = inject(ProductService);
 
-  constructor(
-    private toastr: ToastrService,
-    public productService: ProductService
-  ) {
+  constructor() {
     this.selectedProduct = {
       id: 1,
       name: 'test',
@@ -61,14 +63,37 @@ export class ProductsComponent implements OnInit {
   }
 
   deleteProduct(id: number) {
-    this.productService.deleteProduct(id).subscribe({
+    // Verify if user is autenticated
+    if (!this.userService.isAuthenticated()) {
+      this.toastr.error('You need a session to create products');
+      return;
+    }
+
+    // Verify rol user
+    if (!this.userService.getCurrentUserRole()) {
+      this.toastr.error('Need privileges to complete this action');
+      return;
+    }
+
+    // Getting token
+    const token = this.userService.getToken();
+    
+    this.productService.deleteProduct(id, token).subscribe({
       next: (data) => {
         console.log(data);
         this.toastr.success('Product deleted successfully');
         this.getProducts();
       },
-      error: (e) => {
-        console.log(e);
+      error: (e: HttpErrorResponse) => {
+        if (e.status == 401) {
+          this.toastr.error('Session Expired, please init session again');
+          this.userService.logout();
+        } else if (e.status == 403) {
+          this.toastr.error('Forbbiden');
+        } else {
+          console.log(e);
+          this.toastr.error('Error to delete product');
+        }
       },
     });
   }

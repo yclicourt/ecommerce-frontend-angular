@@ -32,19 +32,12 @@
             href="categories"
             >Categories</a
           >
-          @if(this.userService.getCurrentUserRole() === 'ADMIN'){
           <a
             class="text-sm font-normal text-dark-grey-700 hover:text-dark-grey-900"
             href="admin/dashboard"
-            >Dashboard</a
+            >Dashboard Admin</a
           >
-          }@else {
-          <a
-            class="text-sm font-normal text-dark-grey-700 hover:text-dark-grey-900"
-            href="#"
-            >Dashboard</a
-          >
-          }
+
           <a
             class="text-sm font-normal text-dark-grey-700 hover:text-dark-grey-900"
             href="about"

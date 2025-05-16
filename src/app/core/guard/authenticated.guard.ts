@@ -1,14 +1,21 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanMatchFn, GuardResult, MaybeAsync, Router } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
+import { map } from 'rxjs';
 
-export const AuthenticatedGuard: CanActivateFn = (route, state) => {
-  const userService = inject(UserService);
+export const AuthGuard: CanMatchFn = (
+  route,
+  segments
+): MaybeAsync<GuardResult> => {
   const router = inject(Router);
 
-  if (userService.isAuthenticated()) {
-    return router.navigate(['dashboard']);
-  } else {
-    return true;
-  }
+  return inject(UserService).currentUser$.pipe(
+    map((user) => {
+      if (user) {
+        return true;
+      }
+
+      return router.createUrlTree(['/auth/login']);
+    })
+  );
 };

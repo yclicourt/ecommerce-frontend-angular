@@ -1,14 +1,15 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guard/auth.guard';
 import { AdminGuard } from './core/guard/admin-guard.guard';
 import { Role } from '../app/features/auth/interfaces/role.enum';
+import { AuthGuard } from './core/guard/authenticated.guard';
+import { RoleGuard } from './core/guard/role-guard.guard';
 
 export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomeComponent),
-    data: { roles: [Role.ADMIN, Role.USER] },
+    canMatch: [AuthGuard],
   },
   {
     path: '',
@@ -16,11 +17,11 @@ export const routes: Routes = [
       import('@features/auth/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    canActivate:[AdminGuard]
   },
   {
     path: 'products',
     loadChildren: () => import('@features/product-feature/product.routes'),
+    canMatch: [AuthGuard],
   },
   {
     path: 'register',
@@ -35,8 +36,7 @@ export const routes: Routes = [
       import('./pages/profile/profile.component').then(
         (m) => m.ProfileComponent
       ),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.ADMIN, Role.USER] },
+    canActivate: [RoleGuard([Role.ADMIN, Role.USER])],
   },
   {
     path: 'admin/dashboard',
@@ -44,7 +44,15 @@ export const routes: Routes = [
       import('./pages/dashboard-admin/dashboard-admin.component').then(
         (m) => m.DashboardAdminComponent
       ),
-    canActivate: [AuthGuard, AdminGuard],
+    canActivate: [RoleGuard([Role.ADMIN])],
+  },
+  {
+    path: 'user/dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard-user/dashboard-user.component').then(
+        (m) => m.DashboardUserComponent
+      ),
+    canActivate: [RoleGuard([Role.USER])],
   },
 
   { path: '**', redirectTo: '', pathMatch: 'full' },

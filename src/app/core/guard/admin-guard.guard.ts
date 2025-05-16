@@ -11,13 +11,13 @@ export const AdminGuard: CanActivateFn = (route, state) => {
 
   // Check if the user is authenticated
   if (!userService.isAuthenticated()) {
-    router.navigate(['login'], {
+    router.navigate(['/login'], {
       queryParams: { returnUrl: state.url },
     });
     return false;
   }
   // Check if the user has the required role
-  const requiredRole = route.data['role'] as Role;
+  const requiredRole = route.data['roles'] as Role;
 
   // If there is no role required, allow access
   if (!requiredRole) {
@@ -31,21 +31,17 @@ export const AdminGuard: CanActivateFn = (route, state) => {
   const requiredRoles = route.data['roles'] as Role[];
 
   if (requiredRoles && !requiredRoles.includes(userRole)) {
-    redirectBasedOnRole(userRole);
+    switch(userRole){
+      case Role.ADMIN:
+        router.navigate(['**'])
+        break
+      case Role.USER:
+        router.navigate(['user/dashboard'])
+      
+    }
     return false;
   }
 
   return true;
 };
 
-
-const redirectBasedOnRole = (role: Role) => {
-
-  const router = inject(Router)
-  const routes = {
-    [Role.ADMIN]: '**',
-    [Role.USER]: 'user/dashboard',
-  };
-
-  router.navigate([routes[role] || 'login']);
-};

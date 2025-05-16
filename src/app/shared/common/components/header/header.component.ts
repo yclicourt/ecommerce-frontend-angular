@@ -15,9 +15,7 @@ export class HeaderComponent implements OnInit {
   router = inject(Router);
   selectedProfile!: Usuario;
 
-  ngOnInit(): void {
-    console.log(this.userService.getCurrentUserRole());
-  }
+  ngOnInit(): void {}
 
   logout(): void {
     this.userService.logout();

@@ -1,7 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Usuario } from '../../features/auth/interfaces/register.interface';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  tap,
+  delay,
+  catchError,
+  throwError,
+} from 'rxjs';
 import { Login } from '../../features/auth/interfaces/login.interface';
 import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.interface';
 import { Router } from '@angular/router';
@@ -14,20 +21,22 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class UserService {
   private readonly API_URL = 'http://localhost:4000/api/v1';
   private tokenKey = 'tokenKey';
+  private currentUser = 'currentUser';
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<Usuario>;
+  private _currentUserSubject: BehaviorSubject<Usuario | null>;
+  public currentUser$: Observable<Usuario | null>;
   private jwtHelper = new JwtHelperService();
 
   users: Usuario[] = [];
 
   constructor() {
-    this.currentUserSubject = new BehaviorSubject<Usuario>(
-      JSON.parse(localStorage.getItem('currentUser') || '{}')
+    const storedUser = localStorage.getItem('currentUser');
+    this._currentUserSubject = new BehaviorSubject<Usuario | null>(
+      storedUser ? JSON.parse(storedUser) : null
     );
-    this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUser$ = this._currentUserSubject.asObservable();
   }
 
   registerUser(registerUser: Usuario): Observable<Usuario> {
@@ -40,16 +49,22 @@ export class UserService {
     return this.http
       .post<ResponseAccess>(`${this.API_URL}/auth/login`, loginUser)
       .pipe(
+        delay(150),
         tap((response) => {
-          if (response.token) {
+          if (response) {
             this.setToken(response.token);
-
+            this._currentUserSubject.next(response.user);
+            this.saveUser(response.user);
+          } else {
+            this.removeToken();
+            throw new Error('Invalid login');
           }
+        }),
+        catchError((error) => {
+          this.removeToken();
+          return throwError(() => error);
         })
       );
-  }
-  public get currentUserValue() {
-    return this.currentUserSubject.value;
   }
 
   getUser(id: number): Observable<Usuario> {
@@ -72,6 +87,11 @@ export class UserService {
   private setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
+
+  private saveUser(user: Usuario): void {
+    localStorage.setItem(this.currentUser, JSON.stringify(user));
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
@@ -85,8 +105,13 @@ export class UserService {
     return Date.now() < exp;
   }
 
+  private removeToken() {
+    localStorage.removeItem(this.tokenKey);
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
-    this.router.navigate(['login']);
+    localStorage.removeItem(this.currentUser);
+    this.router.navigateByUrl('/login');
   }
 }
