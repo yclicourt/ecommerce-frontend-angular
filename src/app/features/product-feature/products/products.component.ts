@@ -9,15 +9,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { HeaderProduct } from '@shared/common/components/header-products/header-products.component';
 import { UserService } from '@shared/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { HeaderComponent } from '../../../shared/common/components/header/header.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [
-    HeaderProduct,
     MatCardModule,
     MatButtonModule,
     RouterLink,
@@ -26,7 +25,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     FormsModule,
     MatInputModule,
     MatButtonModule,
-    HeaderProduct,
+    HeaderComponent,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -77,7 +76,7 @@ export class ProductsComponent implements OnInit {
 
     // Getting token
     const token = this.userService.getToken();
-    
+
     this.productService.deleteProduct(id, token).subscribe({
       next: (data) => {
         console.log(data);

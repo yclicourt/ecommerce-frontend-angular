@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HeaderProduct } from '@shared/common/components/header-products/header-products.component';
 import { Usuario } from '@features/auth/interfaces/register.interface';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
+import { HeaderComponent } from "../../shared/common/components/header/header.component";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [HeaderProduct],
+  imports: [ HeaderComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
