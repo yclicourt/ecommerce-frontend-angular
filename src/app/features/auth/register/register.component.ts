@@ -9,6 +9,7 @@ import { UserService } from '@shared/services/user.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ import { NgClass } from '@angular/common';
 })
 export class RegisterComponent {
   private userService = inject(UserService);
+  private toastr = inject(ToastrService);
   private router = inject(Router);
   registerForm: FormGroup;
   name: FormControl;
@@ -47,9 +49,18 @@ export class RegisterComponent {
 
   register() {
     this.userService.registerUser(this.registerForm.value).subscribe({
-      next: () => this.router.navigate(['login']),
+      next: (data) => {
+        if (data) {
+          this.toastr.success('User registered successfully');
+          this.router.navigate(['login']);
+        }
+      },
       error: (error: HttpErrorResponse) => {
-        console.error('Register error', error.error.message);
+        if (error.status === 500) {
+          this.toastr.error('Incorrect data');
+        } else {
+          console.log(error);
+        }
       },
     });
     this.registerForm.reset();

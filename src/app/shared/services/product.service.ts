@@ -31,6 +31,20 @@ export class ProductService {
     return this.http.get<Product>(`${this.API_URL}/${id}`);
   }
 
+  updateProduct(
+    product: Product,
+    id: number,
+    token: string | null
+  ): Observable<Product> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.patch<Product>(`${this.API_URL}/${id}`, product, {
+      headers,
+    });
+  }
+
   deleteProduct(id: number, token: string | null): Observable<Product> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

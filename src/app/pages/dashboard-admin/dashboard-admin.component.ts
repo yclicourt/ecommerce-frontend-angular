@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '@shared/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Usuario } from '@features/auth/interfaces/register.interface';
+import { User } from '@features/auth/interfaces/register.interface';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -14,7 +14,7 @@ export class DashboardAdminComponent {
   public userService = inject(UserService);
   route = inject(ActivatedRoute);
   router = inject(Router);
-  selectedProfile!: Usuario;
+  selectedProfile!: User;
 
   logout(): void {
     this.userService.logout();

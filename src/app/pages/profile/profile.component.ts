@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Usuario } from '@features/auth/interfaces/register.interface';
+import { User } from '@features/auth/interfaces/register.interface';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
 import { HeaderComponent } from "../../shared/common/components/header/header.component";
@@ -14,11 +14,11 @@ import { HeaderComponent } from "../../shared/common/components/header/header.co
 export class ProfileComponent implements OnInit {
   route = inject(ActivatedRoute);
   userService = inject(UserService);
-  profileData!: Usuario;
+  profileData!: User;
 
   ngOnInit(): void {
     this.route.params.subscribe((param) => {
-      this.userService.getUser(param['id']).subscribe((data: Usuario) => {
+      this.userService.getUser(param['id']).subscribe((data: User) => {
         this.profileData = data;
       });
     });

@@ -1,7 +1,7 @@
-import { Usuario } from './register.interface';
+import { User } from './register.interface';
 
 export interface Login
-  extends Omit<Usuario, 'lastname' | 'name' | 'address' | 'role'> {
+  extends Omit<User, 'lastname' | 'name' | 'address' | 'role'> {
   email: string;
   password: string;
 }

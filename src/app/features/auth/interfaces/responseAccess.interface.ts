@@ -1,6 +1,6 @@
-import { Usuario } from './register.interface';
+import { User } from './register.interface';
 
 export interface ResponseAccess {
   token: string;
-  user: Usuario;
+  user: User;
 }

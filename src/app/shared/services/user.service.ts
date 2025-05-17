@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Usuario } from '../../features/auth/interfaces/register.interface';
+import { User } from '../../features/auth/interfaces/register.interface';
 import {
   BehaviorSubject,
   Observable,
@@ -25,22 +25,22 @@ export class UserService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private _currentUserSubject: BehaviorSubject<Usuario | null>;
-  public currentUser$: Observable<Usuario | null>;
+  private _currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser$: Observable<User | null>;
   private jwtHelper = new JwtHelperService();
 
-  users: Usuario[] = [];
+  users: User[] = [];
 
   constructor() {
     const storedUser = localStorage.getItem('currentUser');
-    this._currentUserSubject = new BehaviorSubject<Usuario | null>(
+    this._currentUserSubject = new BehaviorSubject<User | null>(
       storedUser ? JSON.parse(storedUser) : null
     );
     this.currentUser$ = this._currentUserSubject.asObservable();
   }
 
-  registerUser(registerUser: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(
+  registerUser(registerUser: User): Observable<User> {
+    return this.http.post<User>(
       `${this.API_URL}/auth/register`,
       registerUser
     );
@@ -67,8 +67,8 @@ export class UserService {
       );
   }
 
-  getUser(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.API_URL}/users/${id}`);
+  getUser(id: number): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/users/${id}`);
   }
 
   getCurrentUserRole(): Role {
@@ -88,7 +88,7 @@ export class UserService {
     localStorage.setItem(this.tokenKey, token);
   }
 
-  private saveUser(user: Usuario): void {
+  private saveUser(user: User): void {
     localStorage.setItem(this.currentUser, JSON.stringify(user));
   }
 

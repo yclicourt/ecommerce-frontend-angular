@@ -54,8 +54,23 @@
     <button
       class="bg-gray-700 text-white rounded-full px-4 py-2 font-medium"
       (click)="createProduct()"
+      *ngIf="!currentProductId"
     >
       Add Product
+    </button>
+    <button
+      class="bg-gray-700 text-white rounded-full px-4 py-2 font-medium"
+      (click)="updateProduct()"
+      *ngIf="currentProductId"
+    >
+      Update Product
+    </button>
+    <button
+      class="bg-red-500 text-white rounded-full px-4 py-2 font-medium ml-2"
+      (click)="resetForm()"
+      *ngIf="currentProductId"
+    >
+      Cancel
     </button>
   </form>
 </div>

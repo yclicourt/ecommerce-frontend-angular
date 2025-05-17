@@ -7,11 +7,13 @@ import { RouterLink } from '@angular/router';
 import { ProductFormComponent } from '@components/product-form/product-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '@shared/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../../../shared/common/components/header/header.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-products',
@@ -26,12 +28,14 @@ import { HeaderComponent } from '../../../shared/common/components/header/header
     MatInputModule,
     MatButtonModule,
     HeaderComponent,
+    MatIconModule,
+    CommonModule,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
-  selectedProduct: Product;
+  selectedProduct!: Product;
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   productService = inject(ProductService);
@@ -79,7 +83,6 @@ export class ProductsComponent implements OnInit {
 
     this.productService.deleteProduct(id, token).subscribe({
       next: (data) => {
-        console.log(data);
         this.toastr.success('Product deleted successfully');
         this.getProducts();
       },
@@ -95,5 +98,9 @@ export class ProductsComponent implements OnInit {
         }
       },
     });
+  }
+
+  loadProductForEdit(product: Product) {
+    this.selectedProduct = product;
   }
 }

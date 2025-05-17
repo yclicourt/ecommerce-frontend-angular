@@ -7,7 +7,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Usuario } from '@features/auth/interfaces/register.interface';
+import { User } from '@features/auth/interfaces/register.interface';
 import { Role } from '@features/auth/interfaces/role.enum';
 import { UserService } from '@shared/services/user.service';
 
@@ -38,7 +38,7 @@ export class HasRoleDirective {
     });
   }
 
-  hasRole(user: Usuario, roles: Role[]) {
+  hasRole(user: User, roles: Role[]) {
     return user.role?.some((role) => roles.includes(role));
   }
 }

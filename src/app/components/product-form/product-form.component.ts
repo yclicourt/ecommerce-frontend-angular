@@ -1,4 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,13 +16,14 @@ import {
 import { ProductService } from '@shared/services/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '@shared/services/user.service';
-import { Role, Usuario } from '@features/auth/interfaces/register.interface';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Product } from 'src/app/models/Product';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',
 })
@@ -24,8 +33,11 @@ export class ProductFormComponent implements OnInit {
   description: FormControl;
   price: FormControl;
   image: FormControl;
+  isEditMode: boolean = false;
+  currentProductId: number | null = null;
 
-  
+  @Input() productToEdit: Product | null = null;
+
   public productService = inject(ProductService);
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
@@ -44,7 +56,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.createProduct();
     this.getProducts();
   }
 
@@ -63,20 +74,22 @@ export class ProductFormComponent implements OnInit {
 
     // Getting token
     const token = this.userService.getToken();
-    this.productService.createProduct(this.productForm.value,token).subscribe({
+
+    this.productService.createProduct(this.productForm.value, token).subscribe({
       next: (data) => {
         this.toastr.success('Product added successfully');
         this.getProducts();
       },
       error: (e: HttpErrorResponse) => {
-        if (e.status == 401) {
+        if (e.status == 400) {
+          this.toastr.error(e.error.message)
+        } else if (e.status == 401) {
           this.toastr.error('Session Expired, please init session again');
           this.userService.logout();
         } else if (e.status == 403) {
           this.toastr.error('Forbbiden');
         } else {
           console.log(e);
-          this.toastr.error('Error to create product');
         }
       },
     });
@@ -92,5 +105,72 @@ export class ProductFormComponent implements OnInit {
         console.log(e);
       },
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['productToEdit'] && this.productToEdit) {
+      this.loadProductForEdit(this.productToEdit);
+    }
+  }
+
+  loadProductForEdit(product: Product) {
+    this.isEditMode = true;
+    this.currentProductId = product.id;
+
+    this.productForm.patchValue({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      image: product.image,
+    });
+  }
+
+  resetForm() {
+    this.isEditMode = false;
+    this.currentProductId = null;
+    this.productForm.reset();
+  }
+
+  updateProduct() {
+    // Verify if user is autenticated
+    if (!this.userService.isAuthenticated()) {
+      this.toastr.error('You need a session to create products');
+      return;
+    }
+
+    // Verify rol user
+    if (!this.userService.getCurrentUserRole()) {
+      this.toastr.error('Need privileges to complete this action');
+      return;
+    }
+
+    // Getting token
+    const token = this.userService.getToken();
+
+    //Verify product not null
+    if (this.currentProductId === null) {
+      this.toastr.error('No product selected for update');
+      return;
+    }
+
+    this.productService
+      .updateProduct(this.productForm.value, this.currentProductId, token)
+      .subscribe({
+        next: () => {
+          this.toastr.success('Product updated successfully');
+          this.resetForm();
+          this.getProducts();
+        },
+        error: (e: HttpErrorResponse) => {
+          if (e.status == 401) {
+            this.toastr.error('Session Expired, please init session again');
+            this.userService.logout();
+          } else if (e.status == 403) {
+            this.toastr.error('Forbbiden');
+          } else {
+            console.log(e);
+          }
+        },
+      });
   }
 }

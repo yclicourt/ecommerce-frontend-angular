@@ -1,4 +1,4 @@
 .product-avatar {
-  background-image: url(../../../../../public/images/logo3.jpeg);
+  background-image: url(/logo3.jpeg);
   background-size: cover;
 }
