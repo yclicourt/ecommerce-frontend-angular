@@ -14,14 +14,15 @@ import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.in
 import { Router } from '@angular/router';
 import { Role } from '../../features/auth/interfaces/role.enum';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private readonly API_URL = 'http://localhost:4000/api/v1';
-  private tokenKey = 'tokenKey';
-  private currentUser = 'currentUser';
+  private readonly API_URL = environment.apiUrl;
+  private tokenKey = environment.tokenKey;
+  private currentUser = environment.currentUser;
   private http = inject(HttpClient);
   private router = inject(Router);
 
@@ -32,7 +33,7 @@ export class UserService {
   users: User[] = [];
 
   constructor() {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = localStorage.getItem(this.currentUser);
     this._currentUserSubject = new BehaviorSubject<User | null>(
       storedUser ? JSON.parse(storedUser) : null
     );
@@ -40,10 +41,7 @@ export class UserService {
   }
 
   registerUser(registerUser: User): Observable<User> {
-    return this.http.post<User>(
-      `${this.API_URL}/auth/register`,
-      registerUser
-    );
+    return this.http.post<User>(`${this.API_URL}/auth/register`, registerUser);
   }
   loginUser(loginUser: Login): Observable<ResponseAccess> {
     return this.http
@@ -82,6 +80,32 @@ export class UserService {
       console.error('Error decoding token', e);
       return Role.USER;
     }
+  }
+
+  forgotPassword(email: string): Observable<string> {
+    return this.http.post<string>(`${this.API_URL}/auth/forgot-password`, {
+      email,
+    });
+  }
+
+  resetPassword(token: string | null, formData: User): Observable<string> {
+    return this.http
+      .post<string>(`${this.API_URL}/auth/reset-password`, {
+        token,
+        newPassword: formData.password,
+      })
+      .pipe(
+        catchError((error) => {
+          // Personaliza el mensaje de error según la respuesta
+          let errorMsg = 'Unknown Error';
+          if (error.error?.message) {
+            errorMsg = error.error.message;
+          } else if (error.status === 400) {
+            errorMsg = 'Invalid token or expired';
+          }
+          return throwError(() => new Error(errorMsg));
+        })
+      );
   }
 
   private setToken(token: string): void {

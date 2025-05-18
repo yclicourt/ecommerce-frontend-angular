@@ -56,9 +56,12 @@ export class RegisterComponent {
         }
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status === 500) {
-          this.toastr.error('Incorrect data');
-        } else {
+        if (error.status === 400) {
+
+          this.toastr.error(error.error.message);
+        } else if(error.status === 500){
+          this.toastr.error(error.error.message);
+        }else {
           console.log(error);
         }
       },

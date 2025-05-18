@@ -8,14 +8,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { ForgotPasswordComponent } from "../forgot-password/forgot-password.component";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, ForgotPasswordComponent,CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -28,6 +28,8 @@ export class LoginComponent {
 
   email: FormControl;
   password: FormControl;
+
+  showPasswordModal = false
 
   constructor() {
     this.email = new FormControl('', [Validators.required, Validators.email]);
@@ -61,6 +63,19 @@ export class LoginComponent {
   register() {
     this.router.navigate(['register']);
   }
+
+  openPasswordModal(event: Event) {
+    event.preventDefault();
+    this.showPasswordModal = true;
+    document.body.style.overflow = 'hidden'; // Deshabilita el scroll
+  }
+
+  onClosePasswordModal() {
+    this.showPasswordModal = false;
+    document.body.style.overflow = 'auto'; // Habilita el scroll
+  }
+
+
   hasErrors(field: string, typeError: string) {
     return (
       this.accessForm.get(field)?.hasError(typeError) &&

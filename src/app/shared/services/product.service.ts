@@ -2,12 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../../models/Product';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  readonly API_URL = 'http://localhost:4000/api/v1/products';
+  readonly API_URL = `${environment.apiUrl}/products`;
 
   products: Product[];
 
