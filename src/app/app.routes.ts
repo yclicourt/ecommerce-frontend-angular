@@ -53,20 +53,24 @@ export const routes: Routes = [
     canActivate: [RoleGuard([Role.ADMIN, Role.USER])],
   },
   {
-    path: 'admin/dashboard',
+    path: 'admin/dashboard/layout',
     loadComponent: () =>
-      import('./pages/dashboard-admin/dashboard-admin.component').then(
-        (m) => m.DashboardAdminComponent
+      import(
+        './shared/common/components/dashboard-admin-components/layout/layout.component'
       ),
+    children: [
+      {
+        path: 'profiles',
+        loadComponent: () =>
+          import('./components/profile-dashboard/profile-dashboard.component'),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./components/product-dashboard/product-dashboard.component'),
+      },
+    ],
     canActivate: [RoleGuard([Role.ADMIN])],
-  },
-  {
-    path: 'user/dashboard',
-    loadComponent: () =>
-      import('./pages/dashboard-user/dashboard-user.component').then(
-        (m) => m.DashboardUserComponent
-      ),
-    canActivate: [RoleGuard([Role.USER])],
   },
 
   { path: '**', redirectTo: '', pathMatch: 'full' },
