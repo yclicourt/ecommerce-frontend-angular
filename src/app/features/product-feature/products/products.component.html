@@ -15,7 +15,7 @@
           class="text-black rounded-full py-2 font-medium"
           (click)="loadProductForEdit(product)"
         >
-          <img src="/edit_icon.svg" class="" alt="edit icon">
+          <img src="/edit_icon.svg" class="" alt="edit icon" />
         </a>
       </mat-card-header>
       <img
@@ -43,13 +43,9 @@
 
         <button
           class="flex flex-row justify-evenly bg-red-500 text-white rounded-full px-4 py-2 font-medium"
-          (click)="deleteProduct(product.id)"
+          (click)="deleteProduct(product.id!)"
         >
-          <img
-            src="/delete_icon.svg"
-            class="size-5 mr-2"
-            alt="cart icon"
-          />
+          <img src="/delete_icon.svg" class="size-5 mr-2" alt="cart icon" />
           Delete Product
         </button>
       </mat-card-actions>

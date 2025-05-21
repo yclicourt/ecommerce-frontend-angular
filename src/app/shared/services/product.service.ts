@@ -33,7 +33,7 @@ export class ProductService {
   }
 
   updateProduct(
-    product: Product,
+    product: Omit<Product, 'id'>,
     id: number,
     token: string | null
   ): Observable<Product> {

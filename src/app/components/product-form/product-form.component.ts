@@ -34,7 +34,7 @@ export class ProductFormComponent implements OnInit {
   price: FormControl;
   image: FormControl;
   isEditMode: boolean = false;
-  currentProductId: number | null = null;
+  currentProductId: number | undefined;
 
   @Input() productToEdit: Product | null = null;
 
@@ -127,7 +127,7 @@ export class ProductFormComponent implements OnInit {
 
   resetForm() {
     this.isEditMode = false;
-    this.currentProductId = null;
+    this.currentProductId = undefined;
     this.productForm.reset();
   }
 
@@ -154,7 +154,7 @@ export class ProductFormComponent implements OnInit {
     }
 
     this.productService
-      .updateProduct(this.productForm.value, this.currentProductId, token)
+      .updateProduct(this.productForm.value, this.currentProductId!, token)
       .subscribe({
         next: () => {
           this.toastr.success('Product updated successfully');
