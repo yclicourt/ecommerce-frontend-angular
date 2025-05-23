@@ -33,6 +33,7 @@ export class ProductDetailComponent implements OnInit {
     this.getProduct(id);
   }
 
+  // Method to get a product by ID
   getProduct(id: number) {
     return this.productService.getProduct(id).subscribe({
       next: (data) => {

@@ -39,6 +39,8 @@ export class LoginComponent {
       password: this.password,
     });
   }
+
+  // Method login to authenticate the user
   login(): void {
     this.userService.loginUser(this.accessForm.value).subscribe({
       next: (response) => {
@@ -60,22 +62,25 @@ export class LoginComponent {
     });
   }
 
+  // Method to navigate to the register page
   register() {
     this.router.navigate(['register']);
   }
 
+  // Method to open modal for forgot password
   openPasswordModal(event: Event) {
     event.preventDefault();
     this.showPasswordModal = true;
-    document.body.style.overflow = 'hidden'; // Deshabilita el scroll
+    document.body.style.overflow = 'hidden'; 
   }
 
+  // Method to close modal for forgot password
   onClosePasswordModal() {
     this.showPasswordModal = false;
     document.body.style.overflow = 'auto'; // Habilita el scroll
   }
 
-
+// Method to handle errors in the form
   hasErrors(field: string, typeError: string) {
     return (
       this.accessForm.get(field)?.hasError(typeError) &&

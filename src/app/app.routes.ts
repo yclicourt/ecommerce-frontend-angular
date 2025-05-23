@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
 import { AdminGuard } from './core/guard/admin-guard.guard';
-import { Role } from '../app/features/auth/interfaces/role.enum';
+import { Role } from './features/auth/enums/role.enum';
 import { AuthGuard } from './core/guard/authenticated.guard';
 import { RoleGuard } from './core/guard/role-guard.guard';
 
+
+// Routes for the application
 export const routes: Routes = [
   {
     path: 'home',

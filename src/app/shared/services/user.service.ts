@@ -12,9 +12,10 @@ import {
 import { Login } from '../../features/auth/interfaces/login.interface';
 import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.interface';
 import { Router } from '@angular/router';
-import { Role } from '../../features/auth/interfaces/role.enum';
+import { Role } from '../../features/auth/enums/role.enum';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment.development';
+import { Status } from '@features/auth/enums/status.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -40,35 +41,59 @@ export class UserService {
     this.currentUser$ = this._currentUserSubject.asObservable();
   }
 
-  registerUser(registerUser: User): Observable<User> {
-    return this.http.post<User>(`${this.API_URL}/auth/register`, registerUser);
+  // Method to register the user
+  registerUser(formData: FormData): Observable<User> {
+    return this.http.post<User>(`${this.API_URL}/auth/register`, formData);
   }
+
+  // Method to login the user
   loginUser(loginUser: Login): Observable<ResponseAccess> {
     return this.http
       .post<ResponseAccess>(`${this.API_URL}/auth/login`, loginUser)
       .pipe(
         delay(150),
         tap((response) => {
-          if (response) {
+          if (response && response.user.status === Status.ACTIVE) {
             this.setToken(response.token);
             this._currentUserSubject.next(response.user);
             this.saveUser(response.user);
           } else {
-            this.removeToken();
+            this.handleFailedLogin();
             throw new Error('Invalid login');
           }
         }),
         catchError((error) => {
-          this.removeToken();
+          this.handleFailedLogin();
           return throwError(() => error);
         })
       );
   }
 
+  // Method to get all users
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}/users`);
+  }
+
+  // Method to handle failed login
+  handleFailedLogin(): void {
+    this.removeToken();
+    this._currentUserSubject.next(null);
+  }
+
+  // Method to update user status
+  updateUserStatus(status: Status): void {
+    const currentUser = this._currentUserSubject.value;
+    if (currentUser) {
+      this._currentUserSubject.next({ ...currentUser, status });
+    }
+  }
+
+  // Method to get user by ID
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.API_URL}/users/${id}`);
   }
 
+  // Method to get current user role
   getCurrentUserRole(): Role {
     const token = this.getToken();
     if (!token) return Role.USER;
@@ -82,12 +107,14 @@ export class UserService {
     }
   }
 
+  // Method to forgot password
   forgotPassword(email: string): Observable<string> {
     return this.http.post<string>(`${this.API_URL}/auth/forgot-password`, {
       email,
     });
   }
 
+  // Method to reset the password
   resetPassword(token: string | null, formData: User): Observable<string> {
     return this.http
       .post<string>(`${this.API_URL}/auth/reset-password`, {
@@ -96,7 +123,6 @@ export class UserService {
       })
       .pipe(
         catchError((error) => {
-          // Personaliza el mensaje de error según la respuesta
           let errorMsg = 'Unknown Error';
           if (error.error?.message) {
             errorMsg = error.error.message;
@@ -108,17 +134,22 @@ export class UserService {
       );
   }
 
+  // Method to set the token in local storage
   private setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
 
+  // Method to save the user in local storage
   private saveUser(user: User): void {
     localStorage.setItem(this.currentUser, JSON.stringify(user));
   }
 
+  // Method to get the token from local storage
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
+
+  // Method to check if the user is authenticated
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) {
@@ -129,10 +160,17 @@ export class UserService {
     return Date.now() < exp;
   }
 
+  // Method to check if the token is expired
   private removeToken() {
     localStorage.removeItem(this.tokenKey);
   }
 
+  // Method to check if the user is active
+  isUserActive(): boolean {
+    return this._currentUserSubject.value?.status === Status.ACTIVE;
+  }
+
+  // Method to logout the user
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.currentUser);

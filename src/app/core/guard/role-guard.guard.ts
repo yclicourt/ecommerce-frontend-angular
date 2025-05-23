@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
-import { Role } from '@features/auth/interfaces/role.enum';
+import { Role } from '@features/auth/enums/role.enum';
 import { UserService } from '@shared/services/user.service';
 import { map } from 'rxjs';
 

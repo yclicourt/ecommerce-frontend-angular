@@ -29,6 +29,7 @@ export default class ProductDashboardComponent implements OnInit {
     this.getProductDashboard();
   }
 
+  // Method to get all products
   getProductDashboard() {
     this.productService.getAllProducts().subscribe({
       next: (data) => {
@@ -53,6 +54,7 @@ export default class ProductDashboardComponent implements OnInit {
     this.showEditing = false;
   }
 
+  // Method to updated product at dashboard
   updatedProductDashboard(updatedProduct: Product) {
     // Verify if user is autenticated
     if (!this.userService.isAuthenticated()) {
@@ -89,6 +91,7 @@ export default class ProductDashboardComponent implements OnInit {
       image: this.editingProduct.image,
     };
 
+    // Call the service to update the product
     this.productService.updateProduct(updateData, id, token).subscribe({
       next: () => {
         this.toastr.success('Product updated successfully');
@@ -96,6 +99,7 @@ export default class ProductDashboardComponent implements OnInit {
         this.getProductDashboard();
       },
       error: (error: HttpErrorResponse) => {
+        // Handle different error statuses
         if (error.status === 401) {
           this.toastr.error('Session expired, please login again');
           this.userService.logout();
@@ -111,6 +115,7 @@ export default class ProductDashboardComponent implements OnInit {
     });
   }
 
+  // Method to delete product at dashboard
   deleteProductDashboard(productId: number) {
     // Assign the ID to the currentProductId property
     this.currentProductId = productId;
@@ -135,12 +140,14 @@ export default class ProductDashboardComponent implements OnInit {
       this.toastr.error('No product selected for update');
       return;
     }
+    // Call the service to delete the product
     this.productService.deleteProduct(this.currentProductId, token).subscribe({
       next: () => {
         this.toastr.success('Product deleted successfully');
         this.getProductDashboard();
       },
       error: (e: HttpErrorResponse) => {
+        // Handle different error statuses
         if (e.status == 401) {
           this.toastr.error('Session Expired, please init session again');
           this.userService.logout();

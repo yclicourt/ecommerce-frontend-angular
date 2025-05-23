@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { Role } from '@features/auth/interfaces/role.enum';
+import { Role } from '@features/auth/enums/role.enum';
 import { RoleGuard } from 'src/app/core/guard/role-guard.guard';
 
+// Routes for the product feature module
 export default [
   {
     path: '',

@@ -54,6 +54,7 @@ export class ProductsComponent implements OnInit {
     this.getProducts();
   }
 
+  // Method to get all products
   getProducts() {
     this.productService.getAllProducts().subscribe({
       next: (data) => {
@@ -65,6 +66,7 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  // Method to delete a product
   deleteProduct(id: number) {
     // Verify if user is autenticated
     if (!this.userService.isAuthenticated()) {
@@ -100,6 +102,7 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  // Method to load product for edit
   loadProductForEdit(product: Product) {
     this.selectedProduct = product;
   }

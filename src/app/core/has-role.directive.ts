@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { User } from '@features/auth/interfaces/register.interface';
-import { Role } from '@features/auth/interfaces/role.enum';
+import { Role } from '@features/auth/enums/role.enum';
 import { UserService } from '@shared/services/user.service';
 
 @Directive({

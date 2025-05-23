@@ -33,25 +33,27 @@ export class ForgotPasswordComponent {
     });
   }
 
+  // Close the modal
   onClose() {
     this.closeModal.emit();
   }
 
+  // Getters for form controls
   get Email() {
     return this.forgotPasswordForm.get('email');
   }
   onSubmit() {
-    // Marcar todos los campos como touched para mostrar errores si existen
+    // Mark all fields as touched to show errors if they exist
     this.forgotPasswordForm.markAllAsTouched();
 
-    // Si el formulario es inválido, no proceder
+    // If the form is invalid, do not proceed
     if (this.forgotPasswordForm.invalid) {
       return;
     }
 
     this.isLoading = true;
 
-    // Llamar al servicio para recuperar contraseña
+    // Call the service to reset the password
     this.userService
       .forgotPassword(this.forgotPasswordForm.value.email)
       .subscribe({
@@ -67,6 +69,7 @@ export class ForgotPasswordComponent {
       });
   }
 
+  // Show success and error messages
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
@@ -74,6 +77,7 @@ export class ForgotPasswordComponent {
     });
   }
 
+  // Show error message
   private showErrorMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000,

@@ -16,6 +16,7 @@ export class ProductService {
     this.products = [];
   }
 
+  // Method to create a new product
   createProduct(product: Product, token: string | null): Observable<Product> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -24,14 +25,17 @@ export class ProductService {
     return this.http.post<Product>(this.API_URL, product, { headers });
   }
 
+  // Method to get all products
   getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.API_URL);
   }
 
+  // Method to get a product by ID
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.API_URL}/${id}`);
   }
 
+  // Method to update a product
   updateProduct(
     product: Omit<Product, 'id'>,
     id: number,
@@ -46,6 +50,7 @@ export class ProductService {
     });
   }
 
+  // Method to delete a product
   deleteProduct(id: number, token: string | null): Observable<Product> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

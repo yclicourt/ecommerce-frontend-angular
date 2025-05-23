@@ -37,7 +37,7 @@ export class ResetPasswordComponent {
       password: this.password,
     });
 
-    // Obtener el token de la URL al inicializar el componente
+    // Get the token from the URL when the component is initialized
     this.route.queryParams.subscribe((params) => {
       this.token = params['token'];
       console.log('Getting token:', this.token);
@@ -49,18 +49,20 @@ export class ResetPasswordComponent {
     });
   }
 
+  // Close the modal
   onClose() {
     this.closeModal.emit();
   }
 
+  // Getters for form controls
   get Password() {
     return this.resetPasswordForm.get('password');
   }
   onSubmit() {
-    // Marcar todos los campos como touched para mostrar errores si existen
+    // Marck all fields as touched to show errors if they exist
     this.resetPasswordForm.markAllAsTouched();
 
-    // Si el formulario es inválido, no proceder
+    // If the form is invalid, do not proceed
     if (this.resetPasswordForm.invalid || !this.token) {
       if (!this.token) {
         this.showErrorMessage('Invalid reset token');
@@ -70,7 +72,7 @@ export class ResetPasswordComponent {
 
     this.isLoading = true;
 
-    // Llamar al servicio para recuperar contraseña
+    // Call the service to reset the password
     this.userService
       .resetPassword(this.token, this.resetPasswordForm.value)
       .subscribe({
@@ -87,6 +89,7 @@ export class ResetPasswordComponent {
       });
   }
 
+  // Show success message
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
@@ -94,6 +97,7 @@ export class ResetPasswordComponent {
     });
   }
 
+  // Show error message
   private showErrorMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
