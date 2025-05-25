@@ -29,7 +29,7 @@ export default class ProductDashboardComponent implements OnInit {
     this.getProductDashboard();
   }
 
-  // Method to get all products
+  // Method to get all products dashboard
   getProductDashboard() {
     this.productService.getAllProducts().subscribe({
       next: (data) => {

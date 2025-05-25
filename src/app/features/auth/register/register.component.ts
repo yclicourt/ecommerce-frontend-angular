@@ -40,7 +40,7 @@ export class RegisterComponent {
     this.address = new FormControl('', Validators.required);
     this.password = new FormControl('', Validators.required);
     this.phone = new FormControl('', Validators.required);
-    this.avatar = new FormControl(null as File | null, Validators.required);
+    this.avatar = new FormControl(null as File | null);
     this.registerForm = new FormGroup({
       name: this.name,
       lastname: this.lastname,

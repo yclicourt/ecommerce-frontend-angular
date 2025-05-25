@@ -368,11 +368,7 @@
                   (change)="onFileChange($event)"
                   #fileInput
                   class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-gray-800"
-                  [ngClass]="{ 'is-invalid': hasErrors('avatar', 'required') }"
                 />
-                @if (hasErrors('avatar','required')) {
-                <span class="text-red-500 font-sans">Avatar is required</span>
-                }
               </div>
             </div>
           </div>

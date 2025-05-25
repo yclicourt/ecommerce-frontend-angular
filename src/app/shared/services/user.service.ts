@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../../features/auth/interfaces/register.interface';
 import {
@@ -8,6 +8,9 @@ import {
   delay,
   catchError,
   throwError,
+  from,
+  mergeMap,
+  toArray,
 } from 'rxjs';
 import { Login } from '../../features/auth/interfaces/login.interface';
 import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.interface';
@@ -72,6 +75,128 @@ export class UserService {
   // Method to get all users
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.API_URL}/users`);
+  }
+
+  // Method to delete a user
+  deleteUser(id: number, token: string | null): Observable<User> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'applicaction/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.delete<User>(`${this.API_URL}/users/${id}`, { headers });
+  }
+
+  // Method to delete multiple users
+  deleteUsers(userIds: number[]): Observable<any> {
+    // Verificaciones de autenticación
+    if (!this.isAuthenticated()) {
+      throw new Error('Authentication required');
+    }
+
+    // Get a token
+    const token = this.getToken();
+
+    // If your backend only accepts one ID at a time, we make multiple requests
+    return from(userIds).pipe(
+      mergeMap((id) => this.deleteUser(id, token)),
+      toArray() // Wait for all requests to complete
+    );
+  }
+
+  // Method to updateUser
+  updateUser(
+    user: FormData | Omit<User, 'id' | 'password' | 'createdAt'>,
+    id: number,
+    token: string | null
+  ): Observable<User> {
+
+    // Verify token
+    if (!token) {
+      return throwError(() => new Error('Authentication token is required'));
+    }
+
+    // Get a headers with a token
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    try {
+      if (user instanceof FormData) {
+        return this.handleFormDataUpdate(user, id, headers);
+      } else {
+        return this.handleJsonUpdate(user, id, headers);
+      }
+    } catch (error) {
+      return throwError(() => error);
+    }
+  }
+
+   // Method to handle response if the payload is a Form Data
+  private handleFormDataUpdate(
+    formData: FormData,
+    id: number,
+    headers: HttpHeaders
+  ): Observable<User> {
+    const validatedFormData = this.prepareValidatedFormData(formData);
+
+    return this.http.patch<User>(
+      `${this.API_URL}/users/${id}`,
+      validatedFormData,
+      { headers }
+    );
+  }
+
+  // Method to handle response if the payload is a JSON
+  private handleJsonUpdate(
+    userData: Omit<User, 'id' | 'password' | 'createdAt'>,
+    id: number,
+    headers: HttpHeaders
+  ): Observable<User> {
+    const validatedData = {
+      ...userData,
+      role: this.validateAndNormalizeRoles(userData.role),
+    };
+
+    return this.http.patch<User>(`${this.API_URL}/users/${id}`, validatedData, {
+      headers: headers.set('Content-Type', 'application/json'),
+    });
+  }
+
+  // Method to validate a FormData
+  private prepareValidatedFormData(formData: FormData): FormData {
+    const rolesValue = formData.getAll('role[]'); // We use getAll to get all the values
+    const validatedRoles = this.validateAndNormalizeRoles(rolesValue);
+
+    // Delete existing roles
+    formData.delete('role[]');
+
+    // Add validated roles
+    validatedRoles.forEach((role) => {
+      formData.append('role[]', role);
+    });
+
+    return formData;
+  }
+
+  //Method to validate and normalize roles (reusable)
+  private validateAndNormalizeRoles(roles: unknown): Role[] {
+    //If there are no roles, return USER by default
+    if (!roles) return [Role.USER];
+
+    // Make sure it is an array
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+
+    // Validate each role
+    const validRoles = rolesArray.filter((role): role is Role =>
+      Object.values(Role).includes(role as Role)
+    );
+
+    if (validRoles.length !== rolesArray.length) {
+      throw new Error('Invalid role values provided');
+    }
+
+    // Delete duplicates
+    return [...new Set(validRoles)];
   }
 
   // Method to handle failed login

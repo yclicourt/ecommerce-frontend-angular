@@ -13,5 +13,6 @@ export interface User {
   createdAt: Date;
   role?: Role[];
   status?: Status;
+  avatarFile?:File
 }
 export { Role };

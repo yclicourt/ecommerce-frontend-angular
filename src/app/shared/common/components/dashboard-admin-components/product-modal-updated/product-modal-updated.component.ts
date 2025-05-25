@@ -32,6 +32,7 @@ export class ProductModalUpdatedComponent {
     this.showEditing = false;
   }
 
+  // Method to get all products on dashboard
   getProductDashboard() {
     this.productService.getAllProducts().subscribe({
       next: (data) => {

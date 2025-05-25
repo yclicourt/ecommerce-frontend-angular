@@ -29,13 +29,20 @@
       <div class="lg:ml-40 ml-10 space-x-8">
         <button
           class="hover:bg-green-500 bg-green-700 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer"
+          (click)="openModalUpdated()"
+          [disabled]="selectedUserIds.size !== 1"
         >
           Update Profile
         </button>
         <button
           class="hover:bg-red-500 bg-red-700 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer"
+          (click)="deleteSelectedUsers()"
+          [disabled]="selectedUserIds.size === 0 || isDeleting"
         >
-          Remove Profile
+          <span *ngIf="!isDeleting"
+            >Remove Selected ({{ selectedUserIds.size }})</span
+          >
+          <span *ngIf="isDeleting">Deleting...</span>
         </button>
       </div>
     </div>
@@ -45,7 +52,18 @@
       <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
         <table class="min-w-full leading-normal">
           <thead>
+            <tr class="bg-gray-800"></tr>
+
             <tr class="bg-gray-800">
+              <th
+                class="px-4 py-3 border-b-2 border-gray-600 bg-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
+              >
+                <input
+                  type="checkbox"
+                  (change)="toggleSelectAll($event)"
+                  class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                />
+              </th>
               <th
                 class="px-6 py-3 border-b-2 border-gray-600 bg-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
@@ -85,9 +103,20 @@
           </thead>
           <tbody>
             @for(user of userService.users; track $index){
+
             <tr
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
+              <td
+                class="px-4 py-4 border-b border-gray-600 bg-gray-700 text-sm"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(user.id)"
+                  (change)="toggleUserSelection(user.id)"
+                  class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                />
+              </td>
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
               >
@@ -101,25 +130,25 @@
                     />
                   </div>
                   <div class="ml-3">
-                    <p class="text-white whitespace-no-wrap">{{user.name}}</p>
+                    <p class="text-white whitespace-no-wrap">{{ user.name }}</p>
                   </div>
                 </div>
               </td>
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
               >
-                <p class="text-white whitespace-no-wrap">{{user.lastname}}</p>
+                <p class="text-white whitespace-no-wrap">{{ user.lastname }}</p>
               </td>
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
               >
-                <p class="text-white whitespace-no-wrap">{{user.email}}</p>
+                <p class="text-white whitespace-no-wrap">{{ user.email }}</p>
               </td>
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
               >
                 <select
-                  value="{{user.role}}"
+                  value="{{ user.role }}"
                   class="bg-transparent text-white font-bold"
                 >
                   <option value="USER" class="text-black font-bold">
@@ -133,7 +162,9 @@
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
               >
-                <p class="text-white whitespace-no-wrap">{{user.createdAt}}</p>
+                <p class="text-white whitespace-no-wrap">
+                  {{ user.createdAt }}
+                </p>
               </td>
               <td
                 class="px-5 py-5 border-b border-gray-600 bg-gray-700 text-sm"
@@ -141,7 +172,7 @@
                 <span
                   class="relative inline-block px-3 py-1 font-semibold text-white leading-tight"
                 >
-                  <span class="relative">{{user.phone}}</span>
+                  <span class="relative">{{ user.phone }}</span>
                 </span>
               </td>
               <td
@@ -150,11 +181,19 @@
                 <span
                   class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight"
                 >
+                  @if(user.status === ifActive){
                   <span
                     aria-hidden
-                    class="absolute inset-0 bg-green-300 opacity-50 rounded-full"
+                    class="absolute inset-0 bg-green-600 opacity-50 rounded-full"
                   ></span>
-                  <span class="relative">{{user.status}}</span>
+                  <span class="relative text-white">{{ user.status }}</span>
+                  }@else {
+                  <span
+                    aria-hidden
+                    class="absolute inset-0 bg-amber-500 opacity-50 rounded-full"
+                  ></span>
+                  <span class="relative text-white">{{ user.status }}</span>
+                  }
                 </span>
               </td>
             </tr>
@@ -165,3 +204,12 @@
     </div>
   </div>
 </div>
+
+<app-profile-modal-updated
+  *ngIf="showUpdateModal"
+  [selectedUser]="selectedUser"
+  [isUpdating]="isUpdating"
+  (closeModal)="closeUpdateModal()"
+  (saveChanges)="updateUserProfile($event)"
+>
+</app-profile-modal-updated>
