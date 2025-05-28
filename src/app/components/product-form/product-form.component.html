@@ -41,15 +41,13 @@
     <fieldset>
       <label for="product-image">Product Image:</label>
       <input
-        type="text"
+        type="file"
         id="product-image"
         placeholder="Image Product"
         class="bg-gray-200 p-3 rounded-lg block w-full mb-3"
-        formControlName="image"
+        (change)="onFileChanges($event)"
+        accept="image/*"
       />
-      @if(image.invalid && image.touched){
-      <p class="text-red-500 font-bold">Image is required</p>
-      }
     </fieldset>
     <button
       class="bg-gray-700 text-white rounded-full px-4 py-2 font-medium"

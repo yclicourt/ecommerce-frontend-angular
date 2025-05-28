@@ -6,6 +6,7 @@ import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/models/Product';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-product-modal-updated',
@@ -19,7 +20,14 @@ export class ProductModalUpdatedComponent {
   @Input() editingProduct: Product | null = null;
   @Input() showEditing: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
-  @Output() saveChanges = new EventEmitter<Product>();
+  @Output() saveChanges = new EventEmitter<{
+    product: Product;
+    imageFile?: File;
+  }>();
+
+  private API_URL = environment.apiUrl;
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   // Inject Services
   productService = inject(ProductService);
@@ -30,6 +38,9 @@ export class ProductModalUpdatedComponent {
   closeEditModal() {
     this.editingProduct = null;
     this.showEditing = false;
+    this.selectedFile = null;
+    this.imagePreview = null;
+    this.closeModal.emit();
   }
 
   // Method to get all products on dashboard
@@ -44,10 +55,36 @@ export class ProductModalUpdatedComponent {
     });
   }
 
-  //Method to emit event 
+  // Method to select a file
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+
+      // Show a preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  // Method to get image path
+  getImageUrl(imagePath: string): string {
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return imagePath;
+    }
+    return `${this.API_URL}${imagePath}`;
+  }
+
+  //Method to emit event
   saveProductChanges() {
     if (this.editingProduct) {
-      this.saveChanges.emit(this.editingProduct);
+      this.saveChanges.emit({
+        product: this.editingProduct,
+        imageFile: this.selectedFile || undefined,
+      });
     }
   }
 }

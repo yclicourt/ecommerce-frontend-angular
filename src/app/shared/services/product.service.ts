@@ -17,12 +17,11 @@ export class ProductService {
   }
 
   // Method to create a new product
-  createProduct(product: Product, token: string | null): Observable<Product> {
+  createProduct(formData: FormData, token: string | null): Observable<Product> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-    return this.http.post<Product>(this.API_URL, product, { headers });
+    return this.http.post<Product>(this.API_URL, formData, { headers });
   }
 
   // Method to get all products
@@ -37,12 +36,11 @@ export class ProductService {
 
   // Method to update a product
   updateProduct(
-    product: Omit<Product, 'id'>,
-    id: number,
+    product: FormData | Omit<Product, 'id'>,
+    id: number | undefined,
     token: string | null
   ): Observable<Product> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
     return this.http.patch<Product>(`${this.API_URL}/${id}`, product, {

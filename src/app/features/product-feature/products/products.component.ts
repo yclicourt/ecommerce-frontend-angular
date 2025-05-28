@@ -14,6 +14,7 @@ import { UserService } from '@shared/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../../../shared/common/components/header/header.component';
 import { CommonModule } from '@angular/common';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-products',
@@ -40,14 +41,10 @@ export class ProductsComponent implements OnInit {
   private userService = inject(UserService);
   productService = inject(ProductService);
 
+  private API_URL = environment.apiUrl
+
   constructor() {
-    this.selectedProduct = {
-      id: 1,
-      name: 'test',
-      price: 100,
-      description: 'test description',
-      image: 'image.com',
-    };
+    this.selectedProduct = {} as Product;
   }
 
   ngOnInit(): void {
@@ -66,6 +63,12 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  // Get URL image
+  getSafeImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '/no-image.png';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${this.API_URL}/${imagePath.replace(/^\//, '')}`;
+  }
   // Method to delete a product
   deleteProduct(id: number) {
     // Verify if user is autenticated
@@ -105,5 +108,12 @@ export class ProductsComponent implements OnInit {
   // Method to load product for edit
   loadProductForEdit(product: Product) {
     this.selectedProduct = product;
+  }
+
+  // Handle error
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = '/no-image.png';
+    img.onerror = null;
   }
 }

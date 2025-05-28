@@ -6,6 +6,7 @@ import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/models/Product';
 import { ProductModalUpdatedComponent } from '../../shared/common/components/dashboard-admin-components/product-modal-updated/product-modal-updated.component';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-product-dashboard',
@@ -24,6 +25,7 @@ export default class ProductDashboardComponent implements OnInit {
   productService = inject(ProductService);
   userService = inject(UserService);
   private toastr = inject(ToastrService);
+  private API_URL = environment.apiUrl;
 
   ngOnInit(): void {
     this.getProductDashboard();
@@ -41,6 +43,15 @@ export default class ProductDashboardComponent implements OnInit {
     });
   }
 
+  // Method to get path of image
+  getProductImage(imagePath: string): string {
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return imagePath;
+    }
+
+    return `${this.API_URL}${imagePath}`;
+  }
+
   // Method to open modal
   openModalUpdated(product: Product) {
     //Create a product COPY to edit
@@ -55,7 +66,8 @@ export default class ProductDashboardComponent implements OnInit {
   }
 
   // Method to updated product at dashboard
-  updatedProductDashboard(updatedProduct: Product) {
+  updatedProductDashboard(event: { product: Product; imageFile?: File }) {
+    const { product, imageFile } = event;
     // Verify if user is autenticated
     if (!this.userService.isAuthenticated()) {
       this.toastr.error('You need a session to create products');
@@ -83,16 +95,20 @@ export default class ProductDashboardComponent implements OnInit {
       return;
     }
 
-    // Cleaned data ,only data for updated
-    const updateData: Product = {
-      name: this.editingProduct.name,
-      description: this.editingProduct.description,
-      price: this.editingProduct.price,
-      image: this.editingProduct.image,
-    };
+    // Form Data 
+    const formData = new FormData();
+    formData.append('name', product.name);
+    formData.append('description', product.description!);
+    formData.append('price', product.price.toString());
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    } else if (product.image) {
+      formData.append('imageUrl', product.image);
+    }
 
     // Call the service to update the product
-    this.productService.updateProduct(updateData, id, token).subscribe({
+    this.productService.updateProduct(formData, id, token).subscribe({
       next: () => {
         this.toastr.success('Product updated successfully');
         this.closeEditModal();

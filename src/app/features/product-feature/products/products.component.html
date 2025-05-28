@@ -20,9 +20,10 @@
       </mat-card-header>
       <img
         mat-card-image
-        src="{{ product.image }}"
+        [src]="getSafeImageUrl(product.image)"
         alt="Image Product"
         class="mx-auto w-100 h-60"
+        (error)="handleImageError($event)"
       />
       <mat-card-content>
         <p>

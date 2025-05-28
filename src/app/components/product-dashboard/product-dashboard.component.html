@@ -25,9 +25,10 @@
         </td>
         <td class="p-4">
           <img
-            src="{{ product.image }}"
-            class="w-16 md:w-32 max-w-full max-h-full dark:bg-gray-800 dark:border-gray-700"
-            alt="Image Porduct"
+            [src]="getProductImage(product.image!)"
+            class="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-600"
+            alt="{{product.name}}"
+            onerror="this.src='/no-image.png'"
           />
         </td>
         <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
