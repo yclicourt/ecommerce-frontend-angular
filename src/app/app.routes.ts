@@ -14,7 +14,7 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
-    path: '',
+    path: 'login',
     loadComponent: () =>
       import('@features/auth/login/login.component').then(
         (m) => m.LoginComponent
@@ -74,6 +74,10 @@ export const routes: Routes = [
     ],
     canActivate: [RoleGuard([Role.ADMIN])],
   },
+  {
+    path:'not-found',
+    loadComponent:()=> import('./shared/common/components/not-found/not-found.component')
+  },
 
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];

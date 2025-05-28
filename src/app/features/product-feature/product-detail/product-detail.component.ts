@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [HeaderComponent,MatCardModule],
+  imports: [HeaderComponent, MatCardModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
 })
@@ -19,13 +19,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     public productService: ProductService
   ) {
-    this.selectedProduct = {
-      id: 1,
-      name: 'test',
-      price: 100,
-      description: 'test description',
-      image: 'image.com',
-    };
+    this.selectedProduct = {} as Product;
   }
 
   ngOnInit(): void {
