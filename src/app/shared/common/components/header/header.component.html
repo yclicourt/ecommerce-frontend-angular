@@ -7,10 +7,7 @@
         class="relative flex flex-wrap items-center justify-between w-full bg-white group py-7 shrink-0"
       >
         <div>
-          <img
-            class="h-30"
-            src="/logo.png"
-          />
+          <img class="h-30" src="/logo.png" />
         </div>
         <div
           class="items-center justify-between hidden gap-12 text-black md:flex"
@@ -70,6 +67,84 @@
           >
             Log Out
           </button>
+
+          <div class="relative">
+            <button (click)="toggleCart()" class="relative flex items-center">
+              <img src="/cart_icon.svg" class="size-6" alt="cart icon" />
+
+              <span
+                *ngIf="cartItemCount > 0"
+                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs transform transition-all duration-300 scale-100 hover:scale-110"
+                [class.animate-ping]="cartItemAdded"
+              >
+                {{ cartItemCount }}
+              </span>
+            </button>
+
+            <div
+              *ngIf="showCart"
+              class="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200"
+            >
+              <div class="p-4">
+                <h3 class="text-lg font-medium mb-3">Cart</h3>
+
+                <div *ngIf="cartItems.length === 0" class="py-2 text-gray-500">
+                  cart is empty
+                </div>
+
+                <div
+                  *ngFor="let item of cartItems"
+                  class="py-3 border-b border-gray-100"
+                >
+                  <div class="flex justify-between items-center">
+                    <div class="flex-1">
+                      <div class="font-medium">{{ item.name }}</div>
+                      <div class="text-sm text-gray-600">
+                        {{ item.quantity }} x {{
+                          item.price | currency
+                        }}
+                      </div>
+                    </div>
+                    <button
+                      (click)="removeItem(item.id)"
+                      class="text-red-500 hover:text-red-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div *ngIf="cartItems.length > 0" class="mt-4">
+                  <div class="flex justify-between font-bold border-t pt-3">
+                    <span>Total:</span>
+                    <span
+                      >${{
+                        cartService.getTotalPrice() | number : "1.2-2"
+                      }}</span
+                    >
+                  </div>
+                  <button
+                    class="mt-3 w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-md transition-colors"
+                  >
+                    Proceed to Payment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <button
           onclick="(() => { this.closest('.group').classList.toggle('open')})()"

@@ -15,6 +15,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../../../shared/common/components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { environment } from 'src/environments/environment.development';
+import { CartComponent } from '../../cart/cart.component';
+import { CartService } from '@shared/services/cart.service';
+import { CartItem } from '@features/cart/interfaces/cart-item.interface';
 
 @Component({
   selector: 'app-products',
@@ -40,8 +43,9 @@ export class ProductsComponent implements OnInit {
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   productService = inject(ProductService);
+  cartService = inject(CartService);
 
-  private API_URL = environment.apiUrl
+  private API_URL = environment.apiUrl;
 
   constructor() {
     this.selectedProduct = {} as Product;
@@ -101,6 +105,18 @@ export class ProductsComponent implements OnInit {
           console.log(e);
           this.toastr.error('Error to delete product');
         }
+      },
+    });
+  }
+
+  // Method to Add Item to Cart
+  addItemToCart(product: Product) {
+    this.cartService.addCartItem(product).subscribe({
+      next: (data) => {
+        this.toastr.success('Item added to cart successfully ');
+      },
+      error: (e) => {
+        console.error('Error to added a cart', e);
       },
     });
   }
