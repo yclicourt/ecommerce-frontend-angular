@@ -1,4 +1,6 @@
-<app-header></app-header>
+<app-header>
+
+</app-header>
 <section class="flex justify-evenly mt-5">
   <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-2">
     @for (product of productService.products; track $index) {
@@ -31,15 +33,16 @@
         </p>
       </mat-card-content>
       <mat-card-actions class="flex justify-between">
-        <a
+        <button
           class="flex flex-row justify-evenly bg-gray-700 text-white rounded-full px-4 py-2 font-medium"
+          (click)="addItemToCart(product)"
         >
           <img
             src="/shopping-cart_icon.svg"
             class="size-5 mr-2"
             alt="cart icon"
           />
-          Add Cart</a
+          Add Cart</button
         >
 
         <button
