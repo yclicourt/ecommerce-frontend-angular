@@ -4,7 +4,6 @@ import { Role } from './features/auth/enums/role.enum';
 import { AuthGuard } from './core/guard/authenticated.guard';
 import { RoleGuard } from './core/guard/role-guard.guard';
 
-
 // Routes for the application
 export const routes: Routes = [
   {
@@ -58,7 +57,7 @@ export const routes: Routes = [
     path: 'admin/dashboard/layout',
     loadComponent: () =>
       import(
-        './shared/common/components/dashboard-admin-components/layout/layout.component'
+        '@shared/common/components/dashboard-admin-components/layout/layout.component'
       ),
     children: [
       {
@@ -75,8 +74,14 @@ export const routes: Routes = [
     canActivate: [RoleGuard([Role.ADMIN])],
   },
   {
-    path:'not-found',
-    loadComponent:()=> import('./shared/common/components/not-found/not-found.component')
+    path: 'not-found',
+    loadComponent: () =>
+      import('@shared/common/components/not-found/not-found.component'),
+  },
+  {
+    path: 'order/success',
+    loadComponent: () => import('@features/orders/orders.component'),
+    canActivate: [AuthGuard],
   },
 
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
