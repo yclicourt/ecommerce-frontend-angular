@@ -8,6 +8,7 @@ import { CartItem } from '@features/cart/interfaces/cart-item.interface';
 import { CartService } from '@shared/services/cart.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from '@shared/services/order.service';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
 export class HeaderComponent implements OnInit {
   userService = inject(UserService);
   cartService = inject(CartService);
+  orderService = inject(OrderService);
   toastr = inject(ToastrService);
   router = inject(Router);
   Role = Role;
@@ -28,6 +30,7 @@ export class HeaderComponent implements OnInit {
   cartItems: CartItem[] = [];
   showCart = false;
   cartItemAdded = false;
+  loading = false;
 
   ngOnInit(): void {
     // Load Cart to init
@@ -73,6 +76,7 @@ export class HeaderComponent implements OnInit {
     this.userService.logout();
   }
 
+  // Method to get profile
   getProfile(id?: number) {
     if (!id) return;
     this.userService.getUser(id).subscribe({
@@ -84,6 +88,30 @@ export class HeaderComponent implements OnInit {
       },
     });
   }
+
+  // Method to pay products into cart
+  checkout() {
+    this.loading = true;
+    // Verify if user is autenticated
+    if (!this.userService.isAuthenticated()) {
+      this.toastr.error('You need a session to create products');
+      return;
+    }
+    // Getting token
+    const token = this.userService.getToken();
+
+    this.orderService.createOrder(this.cartItems, token).subscribe({
+      next: (response) => {
+        window.location.href = response.approval_url;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.toastr.error('Error al crear la orden');
+        console.error(err);
+      },
+    });
+  }
+
   hasRole(roles: Role[]) {
     return this.currentUser()?.role?.some((role) => roles.includes(role));
   }

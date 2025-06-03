@@ -1,14 +1,24 @@
 import { INTENT } from '../enums/intent.enum';
 
 export interface PurchaseUnits {
-  intent: INTENT;
+  references_id?: string | number;
   amount: {
     currency_code: string;
     value: string;
+    breakdown?: {
+      item_total: {
+        currency_code: string;
+        value: string | number;
+      };
+    };
   };
   items?: Array<{
     name: string;
-    description: string;
-    image_url: string;
+    unit_amount: {
+      value: string;
+      currency_code?: string;
+    };
+    quantity: string | number;
+    description?: string;
   }>;
 }

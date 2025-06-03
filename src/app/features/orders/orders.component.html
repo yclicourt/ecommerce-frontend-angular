@@ -1,0 +1,249 @@
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center">
+    <div class="inline-flex items-center justify-center">
+      <svg
+        class="animate-spin -ml-1 mr-3 h-8 w-8 text-indigo-600"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <span class="text-lg font-medium text-gray-700"
+        >Procesando tu pago...</span
+      >
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="max-w-md mx-auto bg-red-50 rounded-lg p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg
+          class="h-5 w-5 text-red-400"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error en el pago</h3>
+        <div class="mt-2 text-sm text-red-700">
+          <p>{{ error }}</p>
+        </div>
+        <div class="mt-4">
+          <button
+            (click)="continueShopping()"
+            class="text-sm font-medium text-red-700 hover:text-red-600"
+          >
+            Volver a la tienda <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="order && !loading" class="max-w-4xl mx-auto">
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <!-- Header -->
+      <div
+        class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-8 sm:px-10 sm:py-12"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-white sm:text-3xl">
+              ¡Pago Completado!
+            </h1>
+            <p class="mt-2 text-green-100">
+              Tu orden ha sido procesada exitosamente
+            </p>
+          </div>
+          <div class="bg-white bg-opacity-20 rounded-full p-3">
+            <svg
+              class="h-8 w-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="px-6 py-8 sm:px-10 sm:py-12">
+        <div class="mb-8">
+          <div class="bg-green-50 border-l-4 border-green-400 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg
+                  class="h-5 w-5 text-green-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-green-700">
+                  Hemos enviado un correo de confirmación a tu dirección de
+                  email.
+                  <span class="font-medium"
+                    >Número de orden: #{{ order.id }}</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <!-- Order Summary -->
+          <div>
+            <h2 class="text-lg font-medium text-gray-900 mb-4">
+              Resumen de la Orden
+            </h2>
+            <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+              <ul class="divide-y divide-gray-200">
+                <ng-container *ngFor="let unit of order.purchase_units">
+                  <li *ngFor="let item of unit.items" class="px-4 py-4 sm:px-6">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center">
+                        <div class="min-w-0 flex-1">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            {{ item.name }}
+                          </p>
+                          <p class="text-sm text-gray-500">
+                            {{ item.quantity }} *
+                            {{ item.unit_amount.value | currency }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-900">
+                          {{ item.quantity }} *
+                          {{ item.unit_amount.value | currency }}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                </ng-container>
+              </ul>
+              <div
+                class="px-4 py-4 sm:px-6 border-t border-gray-200 bg-gray-100"
+              >
+                <div
+                  class="flex justify-between text-base font-medium text-gray-900"
+                >
+                  <p>Total</p>
+                  <p>{{ orderTotal | currency }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction Details -->
+          <div>
+            <h2 class="text-lg font-medium text-gray-900 mb-4">
+              Detalles de la Transacción
+            </h2>
+            <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+              <div class="px-4 py-5 sm:p-6">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                  <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Estado</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                      >
+                        {{ order.intent | uppercase }}
+                      </span>
+                    </dd>
+                  </div>
+                  <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">
+                      Método de pago
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 flex items-center">
+                      <svg
+                        class="h-5 w-5 mr-2 text-blue-500"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 0C8.613 0 5.87 2.707 5.87 6.05c0 1.437.573 2.707 1.495 3.684-.745 3.289-1.56 6.597-1.56 6.597l3.703.02s1.056-3.27 1.47-4.66c.414 1.39 1.47 4.66 1.47 4.66l3.703-.02s-.815-3.308-1.56-6.597c.922-.977 1.495-2.247 1.495-3.684C18.13 2.707 15.387 0 12 0zm-.016 3.22c1.1 0 1.993.893 1.993 1.993s-.893 1.993-1.993 1.993-1.993-.893-1.993-1.993.893-1.993 1.993-1.993z"
+                        />
+                      </svg>
+                      PayPal
+                    </dd>
+                  </div>
+                  <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Fecha</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                      {{ currentDate | date : "medium" }}
+                    </dd>
+                  </div>
+                  <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">
+                      ID de Transacción
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 font-mono">
+                      {{ order.id || "N/A" }}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-10 flex flex-col sm:flex-row sm:justify-end gap-3">
+          <button
+            (click)="continueShopping()"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Continuar Comprando
+          </button>
+          <a
+            routerLink="/products"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Ver Mis Pedidos
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
