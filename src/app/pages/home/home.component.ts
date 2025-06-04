@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from "@shared/common/components/header/header.component";
-import { CarouselComponent } from "../../shared/common/components/carousel/carousel.component";
+import { HeaderComponent } from '@shared/common/components/header/header.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, CarouselComponent],
+  imports: [HeaderComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
 
+
+
+  
 }
