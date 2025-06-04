@@ -1,25 +1,26 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Order } from './interfaces/order.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderService } from '@shared/services/order.service';
 import { CartService } from '@shared/services/cart.service';
 import { CommonModule, NgClass } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { CaptureOrderResponse } from './interfaces/capture-order.interface';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
 })
 export default class OrdersComponent implements OnInit {
-  order!: Order;
+  order!: CaptureOrderResponse;
   loading = true;
   error: string | null = null;
 
   route = inject(ActivatedRoute);
-  router!: Router;
+  router = inject(Router);
   orderService = inject(OrderService);
   cartService = inject(CartService);
   toastr = inject(ToastrService);
@@ -33,8 +34,10 @@ export default class OrdersComponent implements OnInit {
   captureOrder() {
     const token = this.route.snapshot.queryParamMap.get('token');
     this.orderService.captureOrder(token!).subscribe({
-      next: (order) => {
+      next: (order: CaptureOrderResponse) => {
         this.order = order;
+        this.orderTotal = this.calculateOrderTotal(order);
+        this.currentDate = new Date();
         this.toastr.success('Order completed succesffully');
         this.loading = false;
         this.cartService.clearCart();
@@ -47,6 +50,10 @@ export default class OrdersComponent implements OnInit {
     });
   }
 
+  private calculateOrderTotal(order: CaptureOrderResponse): string {
+    if (!order.purchase_units?.length) return '0.00';
+    return order.purchase_units[0].payments.captures[0].amount.value;
+  }
   continueShopping() {
     this.router.navigateByUrl('/products');
   }

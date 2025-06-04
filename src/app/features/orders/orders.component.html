@@ -52,7 +52,7 @@
         </div>
         <div class="mt-4">
           <button
-            (click)="continueShopping()"
+            routerLink="/products"
             class="text-sm font-medium text-red-700 hover:text-red-600"
           >
             Volver a la tienda <span aria-hidden="true">&rarr;</span>
@@ -187,7 +187,7 @@
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
                       >
-                        {{ order.intent | uppercase }}
+                        {{ order.statusTransactions | uppercase }}
                       </span>
                     </dd>
                   </div>
@@ -231,7 +231,7 @@
         <!-- Action Buttons -->
         <div class="mt-10 flex flex-col sm:flex-row sm:justify-end gap-3">
           <button
-            (click)="continueShopping()"
+            routerLink="/products"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Continuar Comprando
