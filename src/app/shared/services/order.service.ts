@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CartItem } from '@features/cart/interfaces/cart-item.interface';
 import { INTENT } from '@features/orders/enums/intent.enum';
+import { CaptureOrderResponse } from '@features/orders/interfaces/capture-order.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
@@ -66,8 +67,8 @@ export class OrderService {
     );
   }
   // Method to capture order
-  captureOrder(token: string | null) {
-    return this.http.get<Order>(`${this.API_URL}/capture-order?token=${token}`);
+  captureOrder(token: string | null): Observable<CaptureOrderResponse> {
+    return this.http.get<CaptureOrderResponse>(`${this.API_URL}/capture-order?token=${token}`);
   }
 
   // Method to cancel order
