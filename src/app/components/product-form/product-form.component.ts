@@ -10,6 +10,7 @@ import {
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -17,15 +18,18 @@ import { ProductService } from '@shared/services/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '@shared/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Product } from 'src/app/models/Product';
+import { Product } from '@features/product-feature/interfaces/Product';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+import { Category } from '@features/product-feature/interfaces/category.interface';
+import { CategoryService } from '@shared/services/category.service';
+import { CategoryName } from './enums/category-name.enum';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',
 })
@@ -35,6 +39,15 @@ export class ProductFormComponent implements OnInit {
   description: FormControl;
   price: FormControl;
   image: FormControl;
+
+  availableCategories: Category[] = [];
+  categoryNames = Object.values(CategoryName);
+  selectedCategoryName: CategoryName | null = null;
+  selectedCategories: Array<{
+    name: CategoryName;
+    description?: string;
+  }> = [];
+
   isEditMode: boolean = false;
   currentProductId: number | undefined;
   imageFile: File | null = null;
@@ -46,6 +59,7 @@ export class ProductFormComponent implements OnInit {
   private API_URL = environment.apiUrl;
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
+  private categoriesService = inject(CategoryService);
 
   constructor() {
     this.name = new FormControl('', Validators.required);
@@ -62,8 +76,10 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProducts();
+    this.loadAvailableCategories();
   }
 
+  // Method to create product
   async createProduct() {
     // Verify if user is autenticated
     if (!this.userService.isAuthenticated()) {
@@ -90,16 +106,44 @@ export class ProductFormComponent implements OnInit {
         }
       });
 
+      // Agregar categorías como array de objetos (no solo IDs)
+      if (this.selectedCategories.length > 0) {
+        formData.append(
+          'categories',
+          JSON.stringify(
+            this.selectedCategories.map((c) => ({
+              name: c.name,
+              description: c.description || undefined,
+            }))
+          )
+        );
+      }
       // Add the image file
       if (this.imageFile) {
         formData.append('image', this.imageFile);
       }
 
       try {
-        await firstValueFrom(
+        // Create a product
+        const newProduct = await firstValueFrom(
           this.productService.createProduct(formData, token)
         );
         this.toastr.success('Product added successfully');
+
+        // Create categories asociate to product
+        if (this.selectedCategories.length > 0) {
+          const categoryRequests = this.selectedCategories.map((category) => {
+            return firstValueFrom(
+              this.categoriesService.createCategory({
+                name: category.name,
+                productId: newProduct.id!,
+              })
+            );
+          });
+
+          await Promise.all(categoryRequests);
+          this.toastr.success('Categories added successfully');
+        }
         this.getProducts();
         this.productForm.reset();
       } catch (error: any) {
@@ -112,13 +156,15 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
+  // Method to get image based on url
   getFullImageUrl(imagePath: string | null | undefined): string {
     if (!imagePath) return '/assets/no-image.png';
-    if (imagePath.startsWith('blob:')) return imagePath; // Para previews
+    if (imagePath.startsWith('blob:')) return imagePath;
     if (imagePath.startsWith('http')) return imagePath;
     return `${this.API_URL}/${imagePath.replace(/^\//, '')}`;
   }
 
+  // Method to load image
   loadProductImage() {
     if (this.productForm.get('image')?.value) {
       this.currentImageUrl = this.getFullImageUrl(
@@ -126,6 +172,7 @@ export class ProductFormComponent implements OnInit {
       );
     }
   }
+  // Method to get all products
   getProducts() {
     this.productService.getAllProducts().subscribe({
       next: (data) => {
@@ -137,12 +184,14 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
+  // Method to manage changes on input images
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productToEdit'] && this.productToEdit) {
       this.loadProductForEdit(this.productToEdit);
     }
   }
 
+  // Method to manage changes on input images
   onFileChanges(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -159,6 +208,8 @@ export class ProductFormComponent implements OnInit {
       });
     }
   }
+
+  // Method to load product for editing
   loadProductForEdit(product: Product) {
     this.isEditMode = true;
     this.currentProductId = product.id;
@@ -172,14 +223,24 @@ export class ProductFormComponent implements OnInit {
 
     this.currentImageUrl = this.getFullImageUrl(product.image!);
     this.imageFile = null;
+    this.selectedCategories = product.categories
+      ? product.categories
+          .map((cat) => ({
+            name: (cat.name as string).toUpperCase() as CategoryName,
+            description: cat.description,
+          }))
+          .filter((cat) => Object.values(CategoryName).includes(cat.name))
+      : [];
   }
 
+  // Method to reset Form
   resetForm() {
     this.isEditMode = false;
     this.currentProductId = undefined;
     this.productForm.reset();
   }
 
+  // Method to update product
   async updateProduct() {
     // Verify if user is autenticated
     if (!this.userService.isAuthenticated()) {
@@ -212,6 +273,25 @@ export class ProductFormComponent implements OnInit {
         }
       });
 
+      // Category management
+      if (this.selectedCategories.length > 0) {
+        const categoriesToSend = this.selectedCategories.map((category) => ({
+          name: category.name.toUpperCase(),
+          description: category.description || undefined,
+        }));
+
+        const validCategories = categoriesToSend.filter((cat) =>
+          Object.values(CategoryName).includes(cat.name as CategoryName)
+        );
+
+        if (validCategories.length !== categoriesToSend.length) {
+          this.toastr.error('One or more categories are invalid');
+          return;
+        }
+        console.log(validCategories);
+        formData.append('categories', JSON.stringify(validCategories));
+      }
+
       // Add the image file if a new one was selected
       if (this.imageFile) {
         formData.append('image', this.imageFile);
@@ -220,16 +300,25 @@ export class ProductFormComponent implements OnInit {
         typeof this.productForm.get('image')?.value === 'string'
       ) {
         // If no new image but there's an existing image path
-        formData.append('existingImage', this.productForm.get('image')?.value);
+        formData.append('image', this.productForm.get('image')?.value);
       }
       try {
-        await firstValueFrom(
+        const updatedProduct = await firstValueFrom(
           this.productService.updateProduct(
             formData,
             this.currentProductId,
             token
           )
         );
+        if (updatedProduct.categories) {
+          this.selectedCategories = updatedProduct.categories.map((cat) => ({
+            name: cat.name as CategoryName,
+            description: cat.description,
+          }));
+        } else {
+          this.selectedCategories = [];
+        }
+
         this.toastr.success('Product updated successfully');
         this.resetForm();
         this.getProducts();
@@ -247,6 +336,44 @@ export class ProductFormComponent implements OnInit {
     } else {
       this.toastr.warning('Please fill all required fields correctly');
       this.productForm.markAllAsTouched();
+    }
+  }
+
+  // Method to load categories
+  loadAvailableCategories() {
+    this.categoriesService.getAllCategories().subscribe({
+      next: (data) => {
+        this.availableCategories = data;
+      },
+      error: (err) => {
+        console.error('Error loading categories', err);
+      },
+    });
+  }
+
+  // Method to remove category
+  removeCategory(index: number) {
+    this.selectedCategories.splice(index, 1);
+  }
+
+  // Method to handle a categories
+  addCategory() {
+    if (this.selectedCategoryName) {
+      const categoryName = this.selectedCategoryName.toUpperCase();
+
+      // Verificar que el valor es válido
+      if (!Object.values(CategoryName).includes(categoryName as CategoryName)) {
+        this.toastr.error('Invalid category selected');
+        return;
+      }
+
+      if (!this.selectedCategories.some((c) => c.name === categoryName)) {
+        this.selectedCategories.push({
+          name: categoryName as CategoryName,
+          description: undefined,
+        });
+        this.selectedCategoryName = null;
+      }
     }
   }
 }

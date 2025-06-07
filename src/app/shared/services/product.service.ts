@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product } from '../../models/Product';
+import { Product } from '../../features/product-feature/interfaces/Product';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -36,14 +36,14 @@ export class ProductService {
 
   // Method to update a product
   updateProduct(
-    product: FormData | Omit<Product, 'id'>,
+    formData: FormData,
     id: number | undefined,
     token: string | null
   ): Observable<Product> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    return this.http.patch<Product>(`${this.API_URL}/${id}`, product, {
+    return this.http.patch<Product>(`${this.API_URL}/${id}`, formData, {
       headers,
     });
   }
@@ -51,7 +51,6 @@ export class ProductService {
   // Method to delete a product
   deleteProduct(id: number, token: string | null): Observable<Product> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
     return this.http.delete<Product>(`${this.API_URL}/${id}`, { headers });

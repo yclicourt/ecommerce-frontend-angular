@@ -5,7 +5,7 @@ import { Cart } from '@features/cart/interfaces/cart.interface';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { ProductService } from './product.service';
-import { Product } from 'src/app/models/Product';
+import { Product } from '@features/product-feature/interfaces/Product';
 
 @Injectable({
   providedIn: 'root',

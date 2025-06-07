@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '@shared/services/product.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { Product } from '../../../models/Product';
+import { Product } from '../interfaces/Product';
 import { RouterLink } from '@angular/router';
 import { ProductFormComponent } from '@components/product-form/product-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
-import { Product } from 'src/app/models/Product';
+import { Product } from '@features/product-feature/interfaces/Product';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
