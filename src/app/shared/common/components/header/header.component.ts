@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     // Load Cart to init
-    this.cartService.loadCart().subscribe();
+    this.cartService.loadCart();
 
     // Suscribe to changes
     this.cartService.currentCartItems$.subscribe((items) => {
@@ -72,6 +72,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  // Method to logout
   logout(): void {
     this.userService.logout();
   }
@@ -112,6 +113,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  // Getting a role
   hasRole(roles: Role[]) {
     return this.currentUser()?.role?.some((role) => roles.includes(role));
   }

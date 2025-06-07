@@ -31,6 +31,7 @@ export default class OrdersComponent implements OnInit {
     this.captureOrder();
   }
 
+  // Method to capture Order
   captureOrder() {
     const token = this.route.snapshot.queryParamMap.get('token');
     this.orderService.captureOrder(token!).subscribe({
@@ -50,6 +51,7 @@ export default class OrdersComponent implements OnInit {
     });
   }
 
+  // Method to calculate total payments in Order
   private calculateOrderTotal(order: CaptureOrderResponse): string {
     if (!order.purchase_units?.length) return '0.00';
     return order.purchase_units[0].payments.captures[0].amount.value;

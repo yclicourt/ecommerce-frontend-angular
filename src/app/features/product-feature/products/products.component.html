@@ -1,6 +1,4 @@
-<app-header>
-
-</app-header>
+<app-header></app-header>
 <section class="flex justify-evenly mt-5">
   <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-2">
     @for (product of productService.products; track $index) {
@@ -42,8 +40,8 @@
             class="size-5 mr-2"
             alt="cart icon"
           />
-          Add Cart</button
-        >
+          Add Cart
+        </button>
 
         <button
           class="flex flex-row justify-evenly bg-red-500 text-white rounded-full px-4 py-2 font-medium"

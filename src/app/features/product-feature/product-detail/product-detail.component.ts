@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '@shared/services/product.service';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from '../../../models/Product';
+import { Product } from '../interfaces/Product';
 import { HeaderComponent } from '@shared/common/components/header/header.component';
 import { MatCardModule } from '@angular/material/card';
 
