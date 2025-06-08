@@ -9,11 +9,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProfileModalUpdatedComponent } from '../../shared/common/components/dashboard-admin-components/profile-modal-updated/profile-modal-updated.component';
 import { Role, User } from '@features/auth/interfaces/register.interface';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-dashboard',
   standalone: true,
-  imports: [CommonModule, ProfileModalUpdatedComponent],
+  imports: [CommonModule, ProfileModalUpdatedComponent,FormsModule],
   templateUrl: './profile-dashboard.component.html',
   styleUrl: './profile-dashboard.component.css',
 })
@@ -35,11 +36,16 @@ export default class ProfileDashboardComponent implements OnInit {
   currentUserId!: number | null;
   ifActive: Status = Status.ACTIVE;
   isDeleting = false;
+  searchTerm: string = '';
+  filteredUsers: User[] = [];
 
   ngOnInit(): void {
     this.getUsersDashboard();
+    this.filteredUsers = [...this.userService.users];
   }
 
+
+  
   // Method to get all profiles on dashboard
   getUsersDashboard() {
     this.userService.getAllUsers().subscribe({
@@ -51,6 +57,24 @@ export default class ProfileDashboardComponent implements OnInit {
       },
     });
   }
+
+  // Method to filter user 
+  filterUsers() {
+  if (!this.searchTerm) {
+    this.filteredUsers = [...this.userService.users];
+    return;
+  }
+
+  const term = this.searchTerm.toLowerCase();
+  this.filteredUsers = this.userService.users.filter(user => 
+    user.name.toLowerCase().includes(term) ||
+    user.lastname.toLowerCase().includes(term) ||
+    user.email.toLowerCase().includes(term) ||
+    user.phone.toString().toLowerCase().includes(term) ||
+    user.role?.toString().toLowerCase().includes(term) ||
+    user.status?.toString().toLowerCase().includes(term)
+  );
+}
 
   // Method to handle a selected profile
   toggleUserSelection(userId: number): void {

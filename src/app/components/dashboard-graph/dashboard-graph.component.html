@@ -2,28 +2,28 @@
   <div class="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
     <app-stat-card
       [title]="'Today\'s Money'"
-      [value]="'$' + stats.todaysMoney"
+      [value]="'$' + (stats.todaysMoney | number : '1.2-2')"
       [icon]="'dollar'"
-      [trend]="salesTrend"
-      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+      [trend]="stats.salesTrend"
+      [trendColor]="stats.salesTrend.includes('+') ? 'green' : 'red'"
     >
     </app-stat-card>
 
     <app-stat-card
-      title="Total Users"
+      title="Today's Users"
       [value]="userService.users.length"
       [icon]="'user'"
-      [trend]="salesTrend"
-      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+      [trend]="stats.salesTrend"
+      [trendColor]="stats.salesTrend.includes('+') ? 'green' : 'red'"
     >
     </app-stat-card>
 
     <app-stat-card
       title="Monthly Sales"
-      [value]="'$' + monthlySales"
+      [value]="'$' + (stats.monthlySales | number : '1.2-2')"
       [icon]="'cart'"
-      [trend]="salesTrend"
-      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+      [trend]="stats.salesTrend"
+      [trendColor]="stats.salesTrend.includes('+') ? 'green' : 'red'"
     >
     </app-stat-card>
   </div>
