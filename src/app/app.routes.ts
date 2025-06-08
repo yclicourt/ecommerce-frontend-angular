@@ -13,6 +13,14 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: 'categories',
+    loadComponent: () => import('./pages/categories/categories.component'),
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./pages/about/about.component'),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('@features/auth/login/login.component').then(
@@ -60,6 +68,11 @@ export const routes: Routes = [
         '@shared/common/components/dashboard-admin-components/layout/layout.component'
       ),
     children: [
+      {
+        path: 'dashboard-graph',
+        loadComponent: () =>
+          import('./components/dashboard-graph/dashboard-graph.component'),
+      },
       {
         path: 'profiles',
         loadComponent: () =>
