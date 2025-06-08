@@ -1,0 +1,30 @@
+<div class="mt-12">
+  <div class="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+    <app-stat-card
+      [title]="'Today\'s Money'"
+      [value]="'$' + stats.todaysMoney"
+      [icon]="'dollar'"
+      [trend]="salesTrend"
+      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+    >
+    </app-stat-card>
+
+    <app-stat-card
+      title="Total Users"
+      [value]="userService.users.length"
+      [icon]="'user'"
+      [trend]="salesTrend"
+      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+    >
+    </app-stat-card>
+
+    <app-stat-card
+      title="Monthly Sales"
+      [value]="'$' + monthlySales"
+      [icon]="'cart'"
+      [trend]="salesTrend"
+      [trendColor]="salesTrend.includes('+') ? 'green' : 'red'"
+    >
+    </app-stat-card>
+  </div>
+</div>

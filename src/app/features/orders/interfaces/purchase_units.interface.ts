@@ -13,6 +13,7 @@ export interface PurchaseUnits {
     };
   };
   items?: Array<{
+    id?: string;
     name: string;
     unit_amount: {
       value: string;

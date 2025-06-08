@@ -16,6 +16,8 @@ export class OrderService {
   private FRONTEND_URL = environment.clientUrl;
   private BRAND_NAME = environment.brandName;
 
+  orders: Order[] = [];
+
   constructor() {}
 
   // Method to create order
@@ -68,7 +70,9 @@ export class OrderService {
   }
   // Method to capture order
   captureOrder(token: string | null): Observable<CaptureOrderResponse> {
-    return this.http.get<CaptureOrderResponse>(`${this.API_URL}/capture-order?token=${token}`);
+    return this.http.get<CaptureOrderResponse>(
+      `${this.API_URL}/capture-order?token=${token}`
+    );
   }
 
   // Method to cancel order
