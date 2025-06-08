@@ -21,9 +21,9 @@
         <input
           class="bg-gray-50 outline-none ml-1 block"
           type="text"
-          name=""
-          id=""
-          placeholder="search..."
+          [(ngModel)]="searchTerm"
+          (input)="filterUsers()"
+          placeholder="Search by name, email, etc..."
         />
       </div>
       <div class="lg:ml-40 ml-10 space-x-8">
@@ -102,7 +102,7 @@
             </tr>
           </thead>
           <tbody>
-            @for(user of userService.users; track $index){
+            @for(user of filteredUsers; track $index){
 
             <tr
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -200,6 +200,12 @@
             }
           </tbody>
         </table>
+        <div
+          *ngIf="filteredUsers.length === 0 && searchTerm"
+          class="text-center py-4 text-gray-200"
+        >
+          No users found matching "{{ searchTerm }}"
+        </div>
       </div>
     </div>
   </div>

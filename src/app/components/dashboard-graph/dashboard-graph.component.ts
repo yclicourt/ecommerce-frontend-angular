@@ -3,11 +3,17 @@ import { OrderService } from '@shared/services/order.service';
 import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { StatCardComponent } from '../../shared/common/components/dashboard-admin-components/stat-card/stat-card.component';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { Product } from '@features/product-feature/interfaces/Product';
+import { Order } from '@features/orders/interfaces/order.interface';
+import { User } from '@features/auth/interfaces/register.interface';
+import { DashboardStats } from './interfaces/dashboard-stats.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-graph',
   standalone: true,
-  imports: [StatCardComponent],
+  imports: [StatCardComponent, CommonModule],
   templateUrl: './dashboard-graph.component.html',
   styleUrl: './dashboard-graph.component.css',
 })
@@ -16,39 +22,70 @@ export default class DashboardGraphComponent implements OnInit {
   userService = inject(UserService);
   orderService = inject(OrderService);
 
-  monthlySales: number = 0;
-  salesTrend: string = '+0%';
-
-  stats = {
-    todaysMoney: this.calculateTodaySales(),
-    todaysUsers: this.getNewUsersToday(),
-    newClients: this.getNewClientsThisMonth(),
-    sales: this.calculateTotalSales(),
+  stats: DashboardStats = {
+    todaysMoney: 0,
+    todaysUsers: 0,
+    newClients: 0,
+    sales: 0,
+    activeUsersPercentage: '0%',
+    monthlySales: 0,
+    salesTrend: '+0%',
   };
 
+  // Cache for new clients calculation
+  private newClientsCache: {
+    month: number;
+    year: number;
+    count: number;
+  } | null = null;
+
   ngOnInit(): void {
-    this.calculateSalesData();
+    this.initializeData();
+  }
+
+  private initializeData(): void {
+    const products = this.productService.products;
+    const users = this.userService.users;
+    const orders = this.orderService.orders;
+
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    this.stats = {
+      todaysMoney: this.calculateTodaySales(products, today),
+      todaysUsers: this.getNewUsersToday(users, today),
+      newClients: this.getNewClientsThisMonth(users, currentMonth, currentYear),
+      sales: this.calculateTotalSales(orders, products),
+      activeUsersPercentage: this.getActiveUsersPercentage(users),
+      ...this.calculateSalesData(products),
+    };
   }
 
   // Method to calculate sales data
-  calculateSalesData(): void {
-    this.monthlySales = this.productService.products.reduce(
+  private calculateSalesData(products: Product[]): {
+    monthlySales: number;
+    salesTrend: string;
+  } {
+    const monthlySales = products.reduce(
       (total, product) => total + (product.price || 0),
       0
     );
 
-    // Trend calculation
     const previousMonthSales = 10000;
-    const difference = this.monthlySales - previousMonthSales;
+    const difference = monthlySales - previousMonthSales;
     const percentage = (difference / previousMonthSales) * 100;
 
-    this.salesTrend = `${percentage >= 0 ? '+' : ''}${percentage.toFixed(0)}%`;
+    return {
+      monthlySales,
+      salesTrend: `${percentage >= 0 ? '+' : ''}${percentage.toFixed(0)}%`,
+    };
   }
 
   // Method to calculate sales today
-  calculateTodaySales(): number {
-    const today = new Date().toISOString().split('T')[0];
-    return this.productService.products
+  private calculateTodaySales(products: Product[], today: string): number {
+    return products
       .filter(
         (p) =>
           p.createdAt &&
@@ -57,46 +94,38 @@ export default class DashboardGraphComponent implements OnInit {
       .reduce((sum, product) => sum + (product.price || 0), 0);
   }
 
-  // Method to get new users
-  getNewUsersToday(): number {
-    const today = new Date().toISOString().split('T')[0];
-    return this.userService.users.filter(
+  // Method to get new users today
+  private getNewUsersToday(users: User[], today: string): number {
+    return users.filter(
       (u) =>
         u.createdAt &&
         new Date(u.createdAt).toISOString().split('T')[0] === today
     ).length;
   }
 
-  // Method to get percentage users active
-  getActiveUsersPercentage(): string {
-    const total = this.userService.users.length;
-    const active = this.userService.users.filter(
-      (u) => u.status === 'ACTIVE'
-    ).length;
+  // Method to get user active percentage 
+  private getActiveUsersPercentage(users: User[]): string {
+    const total = users.length;
+    if (total === 0) return '0%';
+
+    const active = users.filter((u) => u.status === 'ACTIVE').length;
     return `${((active / total) * 100).toFixed(1)}%`;
   }
 
-  private lastCalculation: {
-    month: number;
-    year: number;
-    count: number;
-  } | null = null;
-
-  // Method to get new clients in a especific month
-  getNewClientsThisMonth(): number {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    // Return cached value if it is the same month
+  // Method to get new clients by month
+  private getNewClientsThisMonth(
+    users: User[],
+    currentMonth: number,
+    currentYear: number
+  ): number {
     if (
-      this.lastCalculation?.month === currentMonth &&
-      this.lastCalculation?.year === currentYear
+      this.newClientsCache?.month === currentMonth &&
+      this.newClientsCache?.year === currentYear
     ) {
-      return this.lastCalculation.count;
+      return this.newClientsCache.count;
     }
 
-    const count = this.userService.users.filter((user) => {
+    const count = users.filter((user) => {
       const userDate = new Date(user.createdAt);
       return (
         userDate.getMonth() === currentMonth &&
@@ -104,20 +133,18 @@ export default class DashboardGraphComponent implements OnInit {
       );
     }).length;
 
-    // Update cache
-    this.lastCalculation = { month: currentMonth, year: currentYear, count };
+    this.newClientsCache = { month: currentMonth, year: currentYear, count };
     return count;
   }
 
-  // Method to calculte total sales
-  calculateTotalSales(): number {
-    return this.orderService.orders.reduce((total, order) => {
+  // Method to calculate total sales
+  private calculateTotalSales(orders: Order[], products: Product[]): number {
+    return orders.reduce((total, order) => {
+      const items = order.purchase_units[0]?.items || [];
       return (
         total +
-        order.purchase_units[0].items!!.reduce((orderTotal, item) => {
-          const product = this.productService.products.find(
-            (p) => p.id === item.id
-          );
+        items.reduce((orderTotal, item) => {
+          const product = products.find((p) => p.id === item.id);
           return orderTotal + (product?.price || 0) * Number(item.quantity);
         }, 0)
       );
