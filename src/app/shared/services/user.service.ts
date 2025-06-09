@@ -30,9 +30,18 @@ export class UserService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
+  // Observable for the current user
   private _currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   private jwtHelper = new JwtHelperService();
+
+  // Observable for all users
+  private allUsersSubject = new BehaviorSubject<User[]>([]);
+  allUsers$ = this.allUsersSubject.asObservable();
+
+  // Observable for the search term
+  private searchTermSubject = new BehaviorSubject<string>('');
+  searchTerm = this.searchTermSubject.asObservable();
 
   users: User[] = [];
 
@@ -42,6 +51,11 @@ export class UserService {
       storedUser ? JSON.parse(storedUser) : null
     );
     this.currentUser$ = this._currentUserSubject.asObservable();
+  }
+
+  // Method to update the search term
+  updateSearchTerm(term: string): void {
+    this.searchTermSubject.next(term);
   }
 
   // Method to register the user
@@ -74,9 +88,13 @@ export class UserService {
 
   // Method to get all users
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.API_URL}/users`);
+    return this.http.get<User[]>(`${this.API_URL}/users`).pipe(
+      tap((users) => {
+        this.users = users;
+        this.allUsersSubject.next(users);
+      })
+    );
   }
-
   // Method to delete a user
   deleteUser(id: number, token: string | null): Observable<User> {
     const headers = new HttpHeaders({
@@ -109,7 +127,6 @@ export class UserService {
     id: number,
     token: string | null
   ): Observable<User> {
-
     // Verify token
     if (!token) {
       return throwError(() => new Error('Authentication token is required'));
@@ -131,7 +148,7 @@ export class UserService {
     }
   }
 
-   // Method to handle response if the payload is a Form Data
+  // Method to handle response if the payload is a Form Data
   private handleFormDataUpdate(
     formData: FormData,
     id: number,
