@@ -4,7 +4,18 @@ import { Status } from '@features/auth/enums/status.enum';
 import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment.development';
-import { firstValueFrom } from 'rxjs';
+import {
+  combineLatest,
+  combineLatestWith,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProfileModalUpdatedComponent } from '../../shared/common/components/dashboard-admin-components/profile-modal-updated/profile-modal-updated.component';
@@ -14,7 +25,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-profile-dashboard',
   standalone: true,
-  imports: [CommonModule, ProfileModalUpdatedComponent,FormsModule],
+  imports: [CommonModule, ProfileModalUpdatedComponent, FormsModule],
   templateUrl: './profile-dashboard.component.html',
   styleUrl: './profile-dashboard.component.css',
 })
@@ -37,44 +48,67 @@ export default class ProfileDashboardComponent implements OnInit {
   ifActive: Status = Status.ACTIVE;
   isDeleting = false;
   searchTerm: string = '';
-  filteredUsers: User[] = [];
+  filteredUsers$!: Observable<User[]>;
+
+  private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.getUsersDashboard();
-    this.filteredUsers = [...this.userService.users];
+
+    const searchTerm$ = this.userService.searchTerm.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      startWith('')
+    );
+
+    this.filteredUsers$ = combineLatest([
+      this.userService.allUsers$,
+      searchTerm$,
+    ]).pipe(
+      map(([users, term]) => {
+        const userArray: User[] = Array.isArray(users)
+          ? users
+          : users
+          ? [users]
+          : [];
+        if (!term) return userArray;
+        return this.filterUsers(userArray, term);
+      })
+    );
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-  
+  onSearchChange(term: string): void {
+    this.userService.updateSearchTerm(term);
+  }
+
   // Method to get all profiles on dashboard
   getUsersDashboard() {
     this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.userService.users = data;
-      },
+      next: (data) => {},
       error: (e) => {
         console.log(e);
       },
     });
   }
 
-  // Method to filter user 
-  filterUsers() {
-  if (!this.searchTerm) {
-    this.filteredUsers = [...this.userService.users];
-    return;
+  // Method to filter user
+  private filterUsers(users: User[] | null, term: string): User[] {
+    term = term.toLowerCase();
+    return users!.filter(
+      (user) =>
+        user.name?.toLowerCase().includes(term) ||
+        user.lastname?.toLowerCase().includes(term) ||
+        user.email?.toLowerCase().includes(term) ||
+        user.phone?.toString().toLowerCase().includes(term) ||
+        user.role?.toString().toLowerCase().includes(term) ||
+        user.status?.toLowerCase().includes(term)
+    );
   }
-
-  const term = this.searchTerm.toLowerCase();
-  this.filteredUsers = this.userService.users.filter(user => 
-    user.name.toLowerCase().includes(term) ||
-    user.lastname.toLowerCase().includes(term) ||
-    user.email.toLowerCase().includes(term) ||
-    user.phone.toString().toLowerCase().includes(term) ||
-    user.role?.toString().toLowerCase().includes(term) ||
-    user.status?.toString().toLowerCase().includes(term)
-  );
-}
 
   // Method to handle a selected profile
   toggleUserSelection(userId: number): void {
