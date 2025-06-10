@@ -261,14 +261,27 @@
         </div>
       </div>
     </div>
+    <button
+      *ngIf="showScrollButton"
+      (click)="scrollToTop()"
+      class="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition-all duration-300 focus:outline-none transform hover:scale-110 animate-bounce"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
+      </svg>
+    </button>
   </main>
 
-  <footer class="bg-gray-200">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-      <a href="#" class="text-xl font-bold text-gray-500 hover:text-gray-400"
-        >Ecommerce Yoyo's Shop</a
-      >
-      <p class="py-2 text-gray-500 sm:py-0">All rights reserved</p>
-    </div>
-  </footer>
+  <app-footer></app-footer>
 </div>

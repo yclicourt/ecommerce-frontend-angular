@@ -61,6 +61,7 @@ export class HeaderComponent implements OnInit {
       },
       error: (e) => {
         this.toastr.error('Error to remove item from cart', e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -86,6 +87,7 @@ export class HeaderComponent implements OnInit {
       },
       error: (e) => {
         console.error(e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -109,6 +111,7 @@ export class HeaderComponent implements OnInit {
         this.loading = false;
         this.toastr.error('Error al crear la orden');
         console.error(err);
+        this.router.navigateByUrl('/error');
       },
     });
   }

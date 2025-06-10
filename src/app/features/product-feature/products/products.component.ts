@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { ProductService } from '@shared/services/product.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Product } from '../interfaces/Product';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductFormComponent } from '@components/product-form/product-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -40,12 +40,16 @@ import { CartItem } from '@features/cart/interfaces/cart-item.interface';
 })
 export class ProductsComponent implements OnInit {
   selectedProduct!: Product;
+
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   productService = inject(ProductService);
   cartService = inject(CartService);
+  router = inject(Router);
 
   private API_URL = environment.apiUrl;
+  showScrollButton = false;
+  private scrollThreshold = 300;
 
   constructor() {
     this.selectedProduct = {} as Product;
@@ -63,6 +67,7 @@ export class ProductsComponent implements OnInit {
       },
       error: (e) => {
         console.log(e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -104,6 +109,7 @@ export class ProductsComponent implements OnInit {
         } else {
           console.log(e);
           this.toastr.error('Error to delete product');
+          this.router.navigateByUrl('/error');
         }
       },
     });
@@ -117,6 +123,7 @@ export class ProductsComponent implements OnInit {
       },
       error: (e) => {
         console.error('Error to added a cart', e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -131,5 +138,24 @@ export class ProductsComponent implements OnInit {
     const img = event.target as HTMLImageElement;
     img.src = '/no-image.png';
     img.onerror = null;
+  }
+
+  // Method to check scroll position
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.checkScroll();
+  }
+  // Check if the scroll is greater than threshold
+  checkScroll() {
+    this.showScrollButton = window.pageYOffset > this.scrollThreshold;
+  }
+
+  // Scroll to top of the page
+  scrollToTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 }

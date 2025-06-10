@@ -55,6 +55,7 @@ export class LoginComponent {
 
         console.error('Login Error:', error);
         this.toastr.error(errorMessage);
+        this.router.navigateByUrl('/error')
       },
       complete: () => {
         this.accessForm.reset();

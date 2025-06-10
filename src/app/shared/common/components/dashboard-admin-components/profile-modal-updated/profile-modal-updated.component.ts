@@ -26,6 +26,10 @@ export class ProfileModalUpdatedComponent implements OnInit {
   @Output() saveChanges = new EventEmitter<User>();
 
   toastr = inject(ToastrService);
+  // Inject Services
+  userService = inject(UserService);
+  showUpdateModal: boolean = false;
+
   Role = Role;
 
   selectedFile: File | null = null;
@@ -53,10 +57,6 @@ export class ProfileModalUpdatedComponent implements OnInit {
         : [selectedRoles];
     }
   }
-
-  // Inject Services
-  userService = inject(UserService);
-  showUpdateModal: boolean = false;
 
   // Method to close modal
   closeUpdateModal() {
@@ -107,12 +107,13 @@ export class ProfileModalUpdatedComponent implements OnInit {
     const updatedUser: User = {
       ...this.selectedUser,
       role: roles,
-      avatarFile: this.selectedFile ?? undefined, 
+      avatarFile: this.selectedFile ?? undefined,
     };
 
     this.saveChanges.emit(updatedUser);
   }
 
+  // Method to select Role
   toggleRole(role: Role) {
     if (!this.selectedUser) return;
 

@@ -92,6 +92,13 @@ export const routes: Routes = [
       import('@shared/common/components/not-found/not-found.component'),
   },
   {
+    path: 'error',
+    loadComponent: () =>
+      import(
+        '@shared/common/components/internal-server-error/internal-server-error.component'
+      ),
+  },
+  {
     path: 'order/success',
     loadComponent: () => import('@features/orders/orders.component'),
     canActivate: [AuthGuard],

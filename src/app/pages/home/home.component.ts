@@ -1,5 +1,5 @@
 import { CommonModule, NgFor } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CategoryName } from '@components/product-form/enums/category-name.enum';
 import { HeaderComponent } from '@shared/common/components/header/header.component';
 import { CartService } from '@shared/services/cart.service';
@@ -8,11 +8,13 @@ import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { environment } from 'src/environments/environment.development';
+import { Router } from '@angular/router';
+import { FooterComponent } from '@shared/common/components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, CommonModule],
+  imports: [HeaderComponent, FooterComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -20,11 +22,15 @@ export class HomeComponent implements OnInit {
   productService = inject(ProductService);
   userService = inject(UserService);
   cartService = inject(CartService);
+  router = inject(Router);
 
   private toastr = inject(ToastrService);
   CategoryName = CategoryName;
   productsByCategory: { [key in CategoryName]?: Product[] } = {};
   private API_URL = environment.apiUrl;
+
+  showScrollButton = false;
+  private scrollThreshold = 300;
 
   ngOnInit(): void {
     this.initializeCategories();
@@ -47,6 +53,7 @@ export class HomeComponent implements OnInit {
       },
       error: (e) => {
         console.log(e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -91,7 +98,27 @@ export class HomeComponent implements OnInit {
       },
       error: (e) => {
         console.error('Error to added a cart', e);
+        this.router.navigateByUrl('/error');
       },
+    });
+  }
+
+  // Method to check scroll position
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.checkScroll();
+  }
+  // Check if the scroll is greater than threshold
+  checkScroll() {
+    this.showScrollButton = window.pageYOffset > this.scrollThreshold;
+  }
+
+  // Scroll to top of the page
+  scrollToTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
     });
   }
 }

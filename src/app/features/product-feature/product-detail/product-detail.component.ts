@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '@shared/services/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../interfaces/Product';
 import { HeaderComponent } from '@shared/common/components/header/header.component';
 import { MatCardModule } from '@angular/material/card';
@@ -14,11 +14,11 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class ProductDetailComponent implements OnInit {
   selectedProduct: Product;
+  router = inject(Router);
+  private route = inject(ActivatedRoute);
+  public productService = inject(ProductService);
 
-  constructor(
-    private route: ActivatedRoute,
-    public productService: ProductService
-  ) {
+  constructor() {
     this.selectedProduct = {} as Product;
   }
 
@@ -35,6 +35,7 @@ export class ProductDetailComponent implements OnInit {
       },
       error: (e) => {
         console.log(e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
