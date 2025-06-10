@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { ProductModalUpdatedComponent } from '../../shared/common/components/dashboard-admin-components/product-modal-updated/product-modal-updated.component';
 import { environment } from 'src/environments/environment.development';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-dashboard',
@@ -25,6 +26,7 @@ export default class ProductDashboardComponent implements OnInit {
   productService = inject(ProductService);
   userService = inject(UserService);
   private toastr = inject(ToastrService);
+  private router = inject(Router);
   private API_URL = environment.apiUrl;
 
   ngOnInit(): void {
@@ -39,6 +41,7 @@ export default class ProductDashboardComponent implements OnInit {
       },
       error: (e) => {
         console.log(e);
+        this.router.navigateByUrl('/error');
       },
     });
   }
@@ -95,7 +98,7 @@ export default class ProductDashboardComponent implements OnInit {
       return;
     }
 
-    // Form Data 
+    // Form Data
     const formData = new FormData();
     formData.append('name', product.name);
     formData.append('description', product.description!);
@@ -126,6 +129,7 @@ export default class ProductDashboardComponent implements OnInit {
         } else {
           this.toastr.error('Error updating product');
           console.error('Update error:', error);
+          this.router.navigateByUrl('/error');
         }
       },
     });
@@ -172,6 +176,7 @@ export default class ProductDashboardComponent implements OnInit {
         } else {
           console.log(e);
           this.toastr.error('Error to delete product');
+          this.router.navigateByUrl('/error');
         }
       },
     });

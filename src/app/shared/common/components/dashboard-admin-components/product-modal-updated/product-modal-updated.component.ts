@@ -1,12 +1,11 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
-import { ToastrService } from 'ngx-toastr';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { environment } from 'src/environments/environment.development';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-modal-updated',
@@ -32,7 +31,7 @@ export class ProductModalUpdatedComponent {
   // Inject Services
   productService = inject(ProductService);
   userService = inject(UserService);
-  private toastr = inject(ToastrService);
+  router = inject(Router)
 
   // Method to close modal
   closeEditModal() {
@@ -51,6 +50,7 @@ export class ProductModalUpdatedComponent {
       },
       error: (e) => {
         console.log(e);
+        this.router.navigateByUrl('/error')
       },
     });
   }

@@ -1,0 +1,8 @@
+.scroll-top-button {
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.scroll-top-button.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

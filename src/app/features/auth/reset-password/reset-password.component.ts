@@ -85,6 +85,7 @@ export class ResetPasswordComponent {
         error: (error) => {
           this.isLoading = false;
           this.showErrorMessage(error.message || 'Error reset password');
+          this.router.navigateByUrl('/error')
         },
       });
   }

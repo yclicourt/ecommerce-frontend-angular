@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment.development';
 import { Category } from '@features/product-feature/interfaces/category.interface';
 import { CategoryService } from '@shared/services/category.service';
 import { CategoryName } from './enums/category-name.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-form',
@@ -60,6 +61,7 @@ export class ProductFormComponent implements OnInit {
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   private categoriesService = inject(CategoryService);
+  private router = inject(Router)
 
   constructor() {
     this.name = new FormControl('', Validators.required);
@@ -149,6 +151,7 @@ export class ProductFormComponent implements OnInit {
       } catch (error: any) {
         console.error('Create Product error:', error);
         this.toastr.error(error.error?.message || 'Registration failed');
+        this.router.navigateByUrl('/error')
       }
     } else {
       this.toastr.warning('Please fill all required fields correctly');
@@ -331,6 +334,7 @@ export class ProductFormComponent implements OnInit {
           this.toastr.error('Forbidden');
         } else {
           this.toastr.error(error.error?.message || 'Error updating product');
+          this.router.navigateByUrl('/error')
         }
       }
     } else {
