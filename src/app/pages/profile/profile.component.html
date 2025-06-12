@@ -129,44 +129,6 @@
           </div>
           <p class="text-gray-700">{{ profileData.address }}</p>
         </div>
-        <div
-          class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2"
-        >
-          <div class="flex items-center space-x-4 mt-2">
-            <button
-              class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
-                ></path>
-              </svg>
-              <span>Connect</span>
-            </button>
-            <button
-              class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-              <span>Message</span>
-            </button>
-          </div>
-        </div>
       </div>
 
       <div
@@ -223,6 +185,7 @@
             <h4 class="text-xl text-gray-900 font-bold">Statistics</h4>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-4">
+              <!-- Section Total Revenue -->
               <div
                 class="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl"
               >
@@ -232,7 +195,7 @@
                   >
                   <span
                     class="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default"
-                    >7 days</span
+                    >All time</span
                   >
                 </div>
                 <div class="flex items-center justify-between mt-6">
@@ -255,31 +218,13 @@
                   <div class="flex flex-col">
                     <div class="flex items-end">
                       <span class="text-2xl 2xl:text-3xl font-bold"
-                        >$8,141</span
+                        >${{ statsData.totalRevenue | number : "1.2-2" }}</span
                       >
-                      <div class="flex items-center ml-2 mb-1">
-                        <svg
-                          class="w-5 h-5 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                          ></path>
-                        </svg>
-                        <span class="font-bold text-sm text-gray-500 ml-0.5"
-                          >3%</span
-                        >
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- Section Total Orders -->
               <div
                 class="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl"
               >
@@ -311,7 +256,9 @@
                   </div>
                   <div class="flex flex-col">
                     <div class="flex items-end">
-                      <span class="text-2xl 2xl:text-3xl font-bold">217</span>
+                      <span class="text-2xl 2xl:text-3xl font-bold">{{
+                        statsData.totalOrders
+                      }}</span>
                       <div class="flex items-center ml-2 mb-1">
                         <svg
                           class="w-5 h-5 text-green-500"
@@ -335,6 +282,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Section New Connections -->
               <div
                 class="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl"
               >
@@ -344,7 +293,7 @@
                   >
                   <span
                     class="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default"
-                    >7 days</span
+                    >{{ statsData.newConnections }}</span
                   >
                 </div>
                 <div class="flex items-center justify-between mt-6">
@@ -366,7 +315,9 @@
                   </div>
                   <div class="flex flex-col">
                     <div class="flex items-end">
-                      <span class="text-2xl 2xl:text-3xl font-bold">54</span>
+                      <span class="text-2xl 2xl:text-3xl font-bold">{{
+                        statsData.newConnections
+                      }}</span>
                       <div class="flex items-center ml-2 mb-1">
                         <svg
                           class="w-5 h-5 text-green-500"
