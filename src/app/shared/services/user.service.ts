@@ -318,4 +318,10 @@ export class UserService {
     localStorage.removeItem(this.currentUser);
     this.router.navigateByUrl('/login');
   }
+
+  // Method to get the current user id
+  getCurrentUserId(): number | null {
+    const user = this._currentUserSubject.value;
+    return user ? user.id : null;
+  }
 }

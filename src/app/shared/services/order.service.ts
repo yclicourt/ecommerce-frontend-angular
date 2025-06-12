@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { CartItem } from '@features/cart/interfaces/cart-item.interface';
 import { INTENT } from '@features/orders/enums/intent.enum';
 import { CaptureOrderResponse } from '@features/orders/interfaces/capture-order.interface';
+import { MonthlyRevenue } from '@features/orders/interfaces/monthly-revenue.interface';
+import { OrderStats } from '@features/orders/interfaces/order-stast.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
@@ -78,5 +80,15 @@ export class OrderService {
   // Method to cancel order
   cancelOrder() {
     return this.http.get<Order>(`${this.API_URL}/cancel-order`);
+  }
+
+  // Method to get stats of all orders
+  getOrdersStats(userId: number): Observable<OrderStats[]> {
+    return this.http.get<OrderStats[]>(`${this.API_URL}/stats/${userId}`);
+  }
+
+  // Method to get monthly revenue
+  getMonthlyRevenue(userId: number): Observable<MonthlyRevenue[]> {
+    return this.http.get<MonthlyRevenue[]>(`${this.API_URL}/revenue/${userId}`);
   }
 }
