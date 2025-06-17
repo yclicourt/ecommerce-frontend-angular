@@ -324,4 +324,33 @@ export class UserService {
     const user = this._currentUserSubject.value;
     return user ? user.id : null;
   }
+
+  // Method to update user status from backend
+  updateUserStatusInBackend(userId: number, status: Status): Observable<User> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => new Error('Authentication required'));
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http
+      .patch<User>(
+        `${this.API_URL}/users/${userId}/status`,
+        { status },
+        { headers }
+      )
+      .pipe(
+        tap((updatedUser) => {
+          const currentUser = this._currentUserSubject.value;
+          if (currentUser && currentUser.id === userId) {
+            this._currentUserSubject.next(updatedUser);
+            this.saveUser(updatedUser);
+          }
+        })
+      );
+  }
 }

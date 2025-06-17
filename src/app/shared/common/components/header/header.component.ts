@@ -9,6 +9,7 @@ import { CartService } from '@shared/services/cart.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '@shared/services/order.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
   userService = inject(UserService);
   cartService = inject(CartService);
   orderService = inject(OrderService);
+  authService = inject(AuthService);
   toastr = inject(ToastrService);
   router = inject(Router);
   Role = Role;
@@ -75,7 +77,7 @@ export class HeaderComponent implements OnInit {
 
   // Method to logout
   logout(): void {
-    this.userService.logout();
+    this.authService.logout();
   }
 
   // Method to get profile

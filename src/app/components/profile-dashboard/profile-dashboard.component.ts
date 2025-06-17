@@ -49,6 +49,7 @@ export default class ProfileDashboardComponent implements OnInit {
   isDeleting = false;
   searchTerm: string = '';
   filteredUsers$!: Observable<User[]>;
+  Status = Status;
 
   private destroy$ = new Subject<void>();
 
