@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserService } from '@shared/services/user.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,12 +10,10 @@ import { UserService } from '@shared/services/user.service';
   styleUrl: './header.component.css',
 })
 export default class HeaderDashboardComponent implements OnInit {
-  userService = inject(UserService);
-
-  ngOnInit(): void {
-  }
+  authService = inject(AuthService);
+  ngOnInit(): void {}
 
   logout() {
-    this.userService.logout();
+    this.authService.logout();
   }
 }
