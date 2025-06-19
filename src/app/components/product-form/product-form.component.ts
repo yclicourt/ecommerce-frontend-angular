@@ -56,8 +56,10 @@ export class ProductFormComponent implements OnInit {
 
   @Input() productToEdit: Product | null = null;
 
-  public productService = inject(ProductService);
   private API_URL = environment.apiUrl;
+
+  // Inject Services
+  public productService = inject(ProductService);
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   private categoriesService = inject(CategoryService);

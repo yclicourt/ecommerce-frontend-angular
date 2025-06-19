@@ -1,6 +1,9 @@
 export const environment = {
-    production:true,
-    apiUrl:'',
-    tokenKey:'',
-    currentUser:''
+  production: true,
+  apiUrl: '',
+  brandName: '',
+  clientUrl: '',
+  tokenKey: '',
+  currentUser: '',
+  PAYPAL_API: '',
 };

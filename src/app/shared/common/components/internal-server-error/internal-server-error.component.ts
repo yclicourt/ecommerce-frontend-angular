@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './internal-server-error.component.html',
-  styleUrl: './internal-server-error.component.css'
+  styleUrl: './internal-server-error.component.css',
 })
-export default class InternalServerErrorComponent {
-
-}
+export default class InternalServerErrorComponent {}

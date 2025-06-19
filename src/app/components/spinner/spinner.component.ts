@@ -9,6 +9,7 @@ import { SpinnerService } from '@shared/services/spinner.service';
   styleUrl: './spinner.component.css',
 })
 export class SpinnerComponent {
+  // Inject Service
   private readonly spinnerSvc = inject(SpinnerService);
   isLoading = this.spinnerSvc.isLoading;
 }

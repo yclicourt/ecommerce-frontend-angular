@@ -19,11 +19,14 @@ export default class OrdersComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
+  // Inject Services
   route = inject(ActivatedRoute);
   router = inject(Router);
   orderService = inject(OrderService);
   cartService = inject(CartService);
   toastr = inject(ToastrService);
+
+
   orderTotal!: string | number;
   currentDate!: string | number | Date;
 

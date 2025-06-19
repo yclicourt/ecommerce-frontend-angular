@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CartItem } from '@features/cart/interfaces/cart-item.interface';
+import { CartItem } from '@features/orders/interfaces/cart-item.interface';
 import { INTENT } from '@features/orders/enums/intent.enum';
 import { CaptureOrderResponse } from '@features/orders/interfaces/capture-order.interface';
 import { MonthlyRevenue } from '@features/orders/interfaces/monthly-revenue.interface';
@@ -13,7 +13,9 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class OrderService {
+  // Inject Services
   http = inject(HttpClient);
+ 
   private API_URL = `${environment.apiUrl}/orders`;
   private FRONTEND_URL = environment.clientUrl;
   private BRAND_NAME = environment.brandName;

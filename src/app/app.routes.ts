@@ -8,8 +8,7 @@ import { RoleGuard } from './core/guard/role-guard.guard';
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () =>
-      import('./pages/home/home.component').then((m) => m.HomeComponent),
+    loadComponent: () => import('./pages/home/home.component'),
     canMatch: [AuthGuard],
   },
   {
@@ -22,10 +21,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () =>
-      import('@features/auth/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
+    loadComponent: () => import('@features/auth/login/login.component'),
   },
   {
     path: 'products',
@@ -34,31 +30,21 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () =>
-      import('@features/auth/register/register.component').then(
-        (m) => m.RegisterComponent
-      ),
+    loadComponent: () => import('@features/auth/register/register.component'),
   },
   {
     path: 'forgot-password',
     loadComponent: () =>
-      import('@features/auth/forgot-password/forgot-password.component').then(
-        (m) => m.ForgotPasswordComponent
-      ),
+      import('@features/auth/forgot-password/forgot-password.component'),
   },
   {
     path: 'reset-password',
     loadComponent: () =>
-      import('@features/auth/reset-password/reset-password.component').then(
-        (m) => m.ResetPasswordComponent
-      ),
+      import('@features/auth/reset-password/reset-password.component'),
   },
   {
     path: 'profile/:id',
-    loadComponent: () =>
-      import('./pages/profile/profile.component').then(
-        (m) => m.ProfileComponent
-      ),
+    loadComponent: () => import('./pages/profile/profile.component'),
     canActivate: [RoleGuard([Role.ADMIN, Role.USER])],
   },
   {

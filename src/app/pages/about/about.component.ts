@@ -6,8 +6,6 @@ import { HeaderComponent } from '@shared/common/components/header/header.compone
   standalone: true,
   imports: [HeaderComponent],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.css'
+  styleUrl: './about.component.css',
 })
-export default class AboutComponent {
-
-}
+export default class AboutComponent {}

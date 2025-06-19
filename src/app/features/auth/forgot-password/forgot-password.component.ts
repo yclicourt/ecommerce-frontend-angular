@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
 })
-export class ForgotPasswordComponent {
+export default class ForgotPasswordComponent {
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
 

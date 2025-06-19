@@ -4,7 +4,7 @@ import { UserService } from '@shared/services/user.service';
 import { Router, RouterLink } from '@angular/router';
 import { HasRoleDirective } from 'src/app/core/has-role.directive';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CartItem } from '@features/cart/interfaces/cart-item.interface';
+import { CartItem } from '@features/orders/interfaces/cart-item.interface';
 import { CartService } from '@shared/services/cart.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -20,7 +20,6 @@ import { DarkModeService } from '@shared/services/dark-mode.service';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
-
   // Inject services
   userService = inject(UserService);
   cartService = inject(CartService);
@@ -32,7 +31,7 @@ export class HeaderComponent implements OnInit {
   // These are used for navigation and displaying notifications
   toastr = inject(ToastrService);
   router = inject(Router);
-  
+
   Role = Role;
   currentUser = toSignal(this.userService.currentUser$);
 
@@ -77,7 +76,7 @@ export class HeaderComponent implements OnInit {
   }
 
   // Method to verify dark Mode
-   get isDarkMode(): boolean {
+  get isDarkMode(): boolean {
     return this.darkModeService.isDarkMode();
   }
 

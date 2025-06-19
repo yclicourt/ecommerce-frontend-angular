@@ -30,10 +30,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './profile-dashboard.component.css',
 })
 export default class ProfileDashboardComponent implements OnInit {
+
+  // Inject Services
   userService = inject(UserService);
   toastr = inject(ToastrService);
   router = inject(Router);
-
+  
   private http = inject(HttpClient);
   private readonly API_URL = environment.apiUrl;
 

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Product } from '../../features/product-feature/interfaces/Product';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
@@ -11,8 +11,10 @@ export class ProductService {
   readonly API_URL = `${environment.apiUrl}/products`;
 
   products: Product[];
+  // Inject Services
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.products = [];
   }
 

@@ -21,10 +21,12 @@ export class AuthService {
     this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
+  // Method to notify if login is success or not
   notifyLoginSuccess(): void {
     this.isAuthenticatedSubject.next(true);
   }
 
+  // Method to logout 
   logout(): void {
     const currentUserId = this.userService.getCurrentUserId();
     if (currentUserId) {
@@ -43,6 +45,7 @@ export class AuthService {
     }
   }
 
+  // Method to handle perform logout
   private performLogout(): void {
     this.userService.logout();
     this.isAuthenticatedSubject.next(false);

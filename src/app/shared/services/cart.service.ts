@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CartItem } from '@features/cart/interfaces/cart-item.interface';
-import { Cart } from '@features/cart/interfaces/cart.interface';
+import { CartItem } from '@features/orders/interfaces/cart-item.interface';
+import { Cart } from '@features/orders/interfaces/cart.interface';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { ProductService } from './product.service';
@@ -13,6 +13,7 @@ import { Product } from '@features/product-feature/interfaces/Product';
 export class CartService {
   private API_URL = `${environment.apiUrl}/cart`;
 
+  // Inject Services
   productService = inject(ProductService);
   http = inject(HttpClient);
   constructor() {}

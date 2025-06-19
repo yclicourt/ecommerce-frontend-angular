@@ -5,8 +5,9 @@ import { Role } from '@features/auth/enums/role.enum';
 
 
 export const AdminGuard: CanActivateFn = (route, state) => {
-  const userService = inject(UserService);
 
+  // Inject Services
+  const userService = inject(UserService);
   const router = inject(Router);
 
   // Check if the user is authenticated
