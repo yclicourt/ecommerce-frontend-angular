@@ -1,53 +1,53 @@
 <app-header></app-header>
-<section class="flex justify-evenly mt-8">
-  <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-2">
+<section class="flex justify-evenly bg-white dark:bg-gray-800 min-h-screen transition-colors duration-300">
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-6 p-4">
     @for (product of productService.products; track $index) {
-    <mat-card>
+    <mat-card class="bg-white dark:bg-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300 mt-5">
       <mat-card-header class="flex flex-row justify-between">
         <div
           mat-card-avatar
           class="product-avatar"
           routerLink="{{ product.id }}"
         ></div>
-        <mat-card-title>{{ product.name }}</mat-card-title>
-        <mat-card-subtitle>💵{{ product.price }}</mat-card-subtitle>
+        <mat-card-title class="text-gray-800 dark:text-gray-600">{{ product.name }}</mat-card-title>
+        <mat-card-subtitle class="text-gray-600 dark:text-gray-600">💵{{ product.price | currency }}</mat-card-subtitle>
         <a
-          class="text-black rounded-full py-2 font-medium"
+          class="rounded-full py-2 font-medium text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400"
           (click)="loadProductForEdit(product)"
         >
-          <img src="/edit_icon.svg" class="" alt="edit icon" />
+          <img src="/edit_icon.svg" class="w-6 h-6 dark:invert" alt="edit icon" />
         </a>
       </mat-card-header>
       <img
         mat-card-image
         [src]="getSafeImageUrl(product.image)"
         alt="Image Product"
-        class="mx-auto w-100 h-60"
+        class="mx-auto w-full h-60 object-cover"
         (error)="handleImageError($event)"
       />
-      <mat-card-content>
+      <mat-card-content class="text-gray-700 dark:text-gray-600">
         <p>
           {{ product.description }}
         </p>
       </mat-card-content>
       <mat-card-actions class="flex justify-between">
         <button
-          class="flex flex-row justify-evenly bg-gray-700 text-white rounded-full px-4 py-2 font-medium"
+          class="flex flex-row justify-evenly bg-gray-700 hover:bg-gray-600 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white rounded-full px-4 py-2 font-medium transition-colors duration-200"
           (click)="addItemToCart(product)"
         >
           <img
             src="/shopping-cart_icon.svg"
-            class="size-5 mr-2"
+            class="size-5 mr-2 dark:invert"
             alt="cart icon"
           />
           Add Cart
         </button>
 
         <button
-          class="flex flex-row justify-evenly bg-red-500 text-white rounded-full px-4 py-2 font-medium"
+          class="flex flex-row justify-evenly bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 font-medium transition-colors duration-200"
           (click)="deleteProduct(product.id!)"
         >
-          <img src="/delete_icon.svg" class="size-5 mr-2" alt="cart icon" />
+          <img src="/delete_icon.svg" class="size-5 mr-2 dark:invert" alt="cart icon" />
           Delete Product
         </button>
       </mat-card-actions>

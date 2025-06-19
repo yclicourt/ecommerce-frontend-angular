@@ -19,6 +19,8 @@ import { FooterComponent } from '@shared/common/components/footer/footer.compone
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
+
+  // Inject Services
   productService = inject(ProductService);
   userService = inject(UserService);
   cartService = inject(CartService);

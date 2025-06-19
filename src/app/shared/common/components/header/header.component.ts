@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '@shared/services/order.service';
 import { AuthService } from '@shared/services/auth.service';
+import { DarkModeService } from '@shared/services/dark-mode.service';
 
 @Component({
   selector: 'app-header',
@@ -19,12 +20,19 @@ import { AuthService } from '@shared/services/auth.service';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
+
+  // Inject services
   userService = inject(UserService);
   cartService = inject(CartService);
   orderService = inject(OrderService);
   authService = inject(AuthService);
+  darkModeService = inject(DarkModeService);
+
+  // Inject router and toastr
+  // These are used for navigation and displaying notifications
   toastr = inject(ToastrService);
   router = inject(Router);
+  
   Role = Role;
   currentUser = toSignal(this.userService.currentUser$);
 
@@ -66,6 +74,16 @@ export class HeaderComponent implements OnInit {
         this.router.navigateByUrl('/error');
       },
     });
+  }
+
+  // Method to verify dark Mode
+   get isDarkMode(): boolean {
+    return this.darkModeService.isDarkMode();
+  }
+
+  // Method to toggle dark mode
+  toggleDarkMode(): void {
+    this.darkModeService.toggleDarkMode();
   }
 
   // Method to load Cart Items

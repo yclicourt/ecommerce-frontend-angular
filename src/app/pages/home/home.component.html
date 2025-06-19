@@ -1,14 +1,46 @@
 <app-header></app-header>
-<div class="bg-white">
-  <main class="my-8">
-    <div class="container mx-auto px-6">
+<div
+  class="min-h-screen bg-white dark:bg-gray-800 transition-colors duration-300"
+>
+  <main class="container mx-auto px-6 py-8">
+    <div
+      class="h-64 rounded-md overflow-hidden bg-cover bg-center"
+      style="background-image: url('/shoes_category.avif'); opacity: 0.88"
+    >
+      <div class="bg-opacity-20 flex items-center h-full">
+        <div class="px-10 max-w-xl">
+          <h2 class="text-2xl text-white font-semibold">Shoes</h2>
+          <p class="mt-2 text-gray-400">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore
+            facere provident molestias ipsam sint voluptatum pariatur.
+          </p>
+          <button
+            class="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+          >
+            <span>Shop Now</span>
+            <svg
+              class="h-5 w-5 mx-2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="md:flex mt-8 md:-mx-4">
       <div
-        class="h-64 rounded-md overflow-hidden bg-cover bg-center"
-        style="background-image: url('/shoes_category.avif'); opacity: 0.88"
+        class="w-full h-64 md:mx-4 rounded-md overflow-hidden bg-cover bg-center md:w-1/2"
+        style="background-image: url('/clothes_category.webp'); opacity: 0.75"
       >
-        <div class="bg-opacity-20 flex items-center h-full">
+        <div class="flex items-center h-full">
           <div class="px-10 max-w-xl">
-            <h2 class="text-2xl text-white font-semibold">Shoes</h2>
+            <h2 class="text-2xl text-white font-semibold">Fashions</h2>
             <p class="mt-2 text-gray-400">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore
               facere provident molestias ipsam sint voluptatum pariatur.
@@ -32,233 +64,199 @@
           </div>
         </div>
       </div>
-      <div class="md:flex mt-8 md:-mx-4">
-        <div
-          class="w-full h-64 md:mx-4 rounded-md overflow-hidden bg-cover bg-center md:w-1/2"
-          style="background-image: url('/clothes_category.webp'); opacity: 0.75"
-        >
-          <div class="flex items-center h-full">
-            <div class="px-10 max-w-xl">
-              <h2 class="text-2xl text-white font-semibold">Fashions</h2>
-              <p class="mt-2 text-gray-400">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Tempore facere provident molestias ipsam sint voluptatum
-                pariatur.
-              </p>
-              <button
-                class="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+      <div
+        class="w-full h-64 mt-8 md:mx-4 rounded-md overflow-hidden bg-cover bg-center md:mt-0 md:w-1/2"
+        style="
+          background-image: url('/electronic_category.webp');
+          opacity: 0.76;
+        "
+      >
+        <div class="flex items-center h-full">
+          <div class="px-10 max-w-xl">
+            <h2 class="text-2xl text-white font-semibold">Electronics</h2>
+            <p class="mt-2 text-gray-400">
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore
+              facere provident molestias ipsam sint voluptatum pariatur.
+            </p>
+            <button
+              class="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+            >
+              <span>Shop Now</span>
+              <svg
+                class="h-5 w-5 mx-2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <span>Shop Now</span>
-                <svg
-                  class="h-5 w-5 mx-2"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="w-full h-64 mt-8 md:mx-4 rounded-md overflow-hidden bg-cover bg-center md:mt-0 md:w-1/2"
-          style="
-            background-image: url('/electronic_category.webp');
-            opacity: 0.76;
-          "
-        >
-          <div class="flex items-center h-full">
-            <div class="px-10 max-w-xl">
-              <h2 class="text-2xl text-white font-semibold">Electronics</h2>
-              <p class="mt-2 text-gray-400">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Tempore facere provident molestias ipsam sint voluptatum
-                pariatur.
-              </p>
-              <button
-                class="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
-              >
-                <span>Shop Now</span>
-                <svg
-                  class="h-5 w-5 mx-2"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </button>
-            </div>
+                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-      <!-- Sección de Shoes -->
-      <div class="mt-16">
-        <h3 class="text-gray-600 text-2xl font-medium">
-          {{ CategoryName.SHOES }}
-        </h3>
+    </div>
+    <!-- Sección de Shoes -->
+    <div class="mt-16">
+      <h3 class="text-gray-600 dark:text-gray-300 text-2xl font-medium">
+        {{ CategoryName.SHOES }}
+      </h3>
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+      >
+        @for (product of productsByCategory[CategoryName.SHOES]; track
+        product.id) {
         <div
-          class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+          class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden bg-white dark:bg-gray-700"
         >
-          @for (product of productsByCategory[CategoryName.SHOES]; track
-          product.id) {
-          <div
-            class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden"
-          >
-            <div class="flex items-end justify-end bg-cover relative pt-[50%]">
-              <img
-                [src]="getSafeImageUrl(product.image)"
-                alt="{{ product.name }}"
-                class="absolute w-full h-full object-cover object-center"
-                onerror="this.src='/no-image.png'"
-              />
-              <button
-                class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
-                (click)="addItemCart(product)"
+          <div class="flex items-end justify-end bg-cover relative pt-[50%]">
+            <img
+              [src]="getSafeImageUrl(product.image)"
+              alt="{{ product.name }}"
+              class="absolute w-full h-full object-cover object-center"
+              onerror="this.src='/no-image.png'"
+            />
+            <button
+              class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+              (click)="addItemCart(product)"
+            >
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-            <div class="px-5 py-3">
-              <h3 class="text-gray-700 justify-baseline">
-                {{ product.name }}
-              </h3>
-              <span class="text-gray-500 mt-2 font-bold">{{
-                product.price | currency
-              }}</span>
-            </div>
+                <path
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            </button>
           </div>
-          }@empty {
-          <p class="text-gray-500">No hay productos en esta categoría</p>
-          }
+          <div class="px-5 py-3">
+            <h3 class="text-gray-700 dark:text-gray-200 justify-baseline">
+              {{ product.name }}
+            </h3>
+            <span class="text-gray-500 dark:text-gray-300 mt-2 font-bold">{{
+              product.price | currency
+            }}</span>
+          </div>
         </div>
+        }@empty {
+        <p class="text-gray-500">No hay productos en esta categoría</p>
+        }
       </div>
+    </div>
 
-      <!-- Sección de Fashions -->
-      <div class="mt-16">
-        <h3 class="text-gray-600 text-2xl font-medium">
-          {{ CategoryName.FASHIONS }}
-        </h3>
+    <!-- Sección de Fashions -->
+    <div class="mt-16">
+      <h3 class="text-gray-600 dark:text-gray-300 text-2xl font-medium">
+        {{ CategoryName.FASHIONS }}
+      </h3>
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+      >
+        @for (product of productsByCategory[CategoryName.FASHIONS]; track
+        product.id) {
         <div
-          class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+          class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden bg-white dark:bg-gray-700"
         >
-          @for (product of productsByCategory[CategoryName.FASHIONS]; track
-          product.id) {
-          <div
-            class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden"
-          >
-            <div class="flex items-end justify-end bg-cover relative pt-[50%]">
-              <img
-                [src]="getSafeImageUrl(product.image)"
-                alt="{{ product.name }}"
-                class="absolute w-full h-full object-cover object-center"
-                onerror="this.src='/no-image.png'"
-              />
-              <button
-                class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
-                (click)="addItemCart(product)"
+          <div class="flex items-end justify-end bg-cover relative pt-[50%]">
+            <img
+              [src]="getSafeImageUrl(product.image)"
+              alt="{{ product.name }}"
+              class="absolute w-full h-full object-cover object-center"
+              onerror="this.src='/no-image.png'"
+            />
+            <button
+              class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+              (click)="addItemCart(product)"
+            >
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-            <div class="px-5 py-3">
-              <h3 class="text-gray-700 justify-baseline">
-                {{ product.name }}
-              </h3>
-              <span class="text-gray-500 mt-2 font-bold">{{
-                product.price | currency
-              }}</span>
-            </div>
+                <path
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            </button>
           </div>
-          } @empty {
-          <p class="text-gray-500">No hay productos en esta categoría</p>
-          }
+          <div class="px-5 py-3">
+            <h3 class="text-gray-700 dark:text-gray-200  justify-baseline">
+              {{ product.name }}
+            </h3>
+            <span class="text-gray-500 dark:text-gray-300  mt-2 font-bold">{{
+              product.price | currency
+            }}</span>
+          </div>
         </div>
+        } @empty {
+        <p class="text-gray-500">No hay productos en esta categoría</p>
+        }
       </div>
+    </div>
 
-      <!-- Sección de Electronics -->
-      <div class="mt-16">
-        <h3 class="text-gray-600 text-2xl font-medium">
-          {{ CategoryName.ELECTRONICS }}
-        </h3>
+    <!-- Sección de Electronics -->
+    <div class="mt-16">
+      <h3 class="text-gray-600 dark:text-gray-300 text-2xl font-medium">
+        {{ CategoryName.ELECTRONICS }}
+      </h3>
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+      >
+        @for (product of productsByCategory[CategoryName.ELECTRONICS]; track
+        product.id) {
         <div
-          class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6"
+          class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden bg-white dark:bg-gray-700"
         >
-          @for (product of productsByCategory[CategoryName.ELECTRONICS]; track
-          product.id) {
-          <div
-            class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden"
-          >
-            <div class="flex items-end justify-end bg-cover relative pt-[50%]">
-              <img
-                [src]="getSafeImageUrl(product.image)"
-                alt="{{ product.name }}"
-                class="absolute w-full h-full object-cover object-center"
-                onerror="this.src='/no-image.png'"
-              />
-              <button
-                class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
-                (click)="addItemCart(product)"
+          <div class="flex items-end justify-end bg-cover relative pt-[50%]">
+            <img
+              [src]="getSafeImageUrl(product.image)"
+              alt="{{ product.name }}"
+              class="absolute w-full h-full object-cover object-center"
+              onerror="this.src='/no-image.png'"
+            />
+            <button
+              class="absolute p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+              (click)="addItemCart(product)"
+            >
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-            <div class="px-5 py-3">
-              <h3 class="text-gray-700 justify-baseline">
-                {{ product.name }}
-              </h3>
-              <span class="text-gray-500 mt-2 font-bold">{{
-                product.price | currency
-              }}</span>
-            </div>
+                <path
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            </button>
           </div>
-          } @empty {
-          <p class="text-gray-500">No hay productos en esta categoría</p>
-          }
+          <div class="px-5 py-3">
+            <h3 class="text-gray-700 dark:text-gray-200 justify-baseline">
+              {{ product.name }}
+            </h3>
+            <span class="text-gray-500 dark:text-gray-300 mt-2 font-bold">{{
+              product.price | currency
+            }}</span>
+          </div>
         </div>
+        } @empty {
+        <p class="text-gray-500">No hay productos en esta categoría</p>
+        }
       </div>
     </div>
     <button

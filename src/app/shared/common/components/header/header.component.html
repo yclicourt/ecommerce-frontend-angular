@@ -1,291 +1,306 @@
-<!DOCTYPE html>
-<html>
-  <body class="bg-white">
-    <div class="container mx-auto bg-white shadow-xl mt-2">
-      <div
-        class="relative flex flex-wrap items-center justify-between w-full px-6 py-4 group"
-      >
-        <!-- Logo -->
-        <div class="flex items-center">
-          <img class="h-20 w-20" src="/logo.png" alt="Logo" />
-        </div>
-
-        <!-- Menú de navegación (Desktop) -->
-        <div class="items-center hidden gap-8 text-gray-800 md:flex">
-          <nav class="flex items-center space-x-8">
-            <a
-              *hasRole="[Role.ADMIN, Role.USER]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/home"
-              >Home</a
-            >
-            <a
-              *hasRole="[Role.ADMIN]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/products"
-              >Products</a
-            >
-            <a
-              *hasRole="[Role.ADMIN, Role.USER]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/categories"
-              >Categories</a
-            >
-            <a
-              *hasRole="[Role.ADMIN]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/admin/dashboard/layout/dashboard-graph"
-              >Dashboard</a
-            >
-            <a
-              *hasRole="[Role.USER]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/contact"
-              >Contact</a
-            >
-            <a
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              routerLink="/about"
-              >About</a
-            >
-            <a
-              *hasRole="[Role.ADMIN]"
-              class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
-              [routerLink]="['/profile', currentUser()?.id]"
-              >Profile</a
-            >
-          </nav>
-        </div>
-
-        <!-- Acciones (Desktop) -->
-        <div class="items-center hidden gap-4 md:flex">
-          <button
-            class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-sm"
-          >
-            Sign Up
-          </button>
-          <button
-            class="px-4 py-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-            (click)="logout()"
-          >
-            Log Out
-          </button>
-
-          <!-- Carrito -->
-          <div class="relative ml-4">
-            <button
-              (click)="toggleCart()"
-              class="relative flex items-center p-2 text-gray-700 hover:text-indigo-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span
-                *ngIf="cartItemCount > 0"
-                class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform transition-all duration-300 hover:scale-110"
-                [class.animate-ping]="cartItemAdded"
-              >
-                {{ cartItemCount }}
-              </span>
-            </button>
-
-            <!-- Dropdown del carrito -->
-            <div
-              *ngIf="showCart"
-              class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 border border-gray-100 divide-y divide-gray-100"
-            >
-              <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-900">
-                  Shopping Cart
-                </h3>
-                <div
-                  *ngIf="cartItems.length === 0"
-                  class="py-4 text-center text-gray-500"
-                >
-                  Your cart is empty
-                </div>
-
-                <div *ngFor="let item of cartItems" class="py-3">
-                  <div class="flex items-start justify-between">
-                    <div class="flex-1 min-w-0">
-                      <h4 class="text-sm font-medium text-gray-900 truncate">
-                        {{ item.name }}
-                      </h4>
-                      <div class="flex items-center mt-1 text-sm text-gray-500">
-                        <span class="mr-2"
-                          >{{ item.quantity }} ×
-                          {{ item.price | currency }}</span
-                        >
-                      </div>
-                    </div>
-                    <button
-                      (click)="removeItem(item.id)"
-                      class="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Loading State -->
-                <div *ngIf="loading" class="text-center">
-                  <div class="inline-flex items-center justify-center">
-                    <svg
-                      class="animate-spin -ml-1 mr-3 h-8 w-8 text-indigo-600"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span class="text-lg font-medium text-gray-700"
-                      >Procesando tu pago...</span
-                    >
-                  </div>
-                </div>
-
-                <div
-                  *ngIf="cartItems.length > 0 && !loading"
-                  class="pt-4 mt-3 border-t border-gray-200"
-                >
-                  <div
-                    class="flex justify-between py-2 text-base font-medium text-gray-900"
-                  >
-                    <span>Subtotal:</span>
-                    <span>{{ cartService.getTotalPrice() | currency }}</span>
-                  </div>
-                  <button
-                    class="w-full px-4 py-2 mt-3 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                    (click)="checkout()"
-                  >
-                    Checkout
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Menú móvil -->
-        <button
-          class="p-2 text-gray-500 rounded-md md:hidden hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-          onclick="(() => { this.closest('.group').classList.toggle('open')})()"
-        >
-          <span class="sr-only">Open main menu</span>
-          <svg
-            class="w-6 h-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+<header
+  class="bg-white dark:bg-gray-800 shadow-xl transition-colors duration-300"
+>
+  <div class="container mx-auto">
+    <div
+      class="relative flex flex-wrap items-center justify-between text-white dark:bg-gray-700 w-full px-6 py-4 group rounded-md shadow"
+    >
+      <!-- Logo -->
+      <div class="flex items-center">
+        <img class="h-20 w-20" src="/logo.png" alt="Logo" />
       </div>
 
-      <!-- Menú móvil (oculto por defecto) -->
-      <div class="hidden md:hidden group-[.open]:block">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <!-- Menú de navegación (Desktop) -->
+      <div
+        class="items-center hidden gap-8 text-gray-800 dark:text-gray-200 md:flex"
+      >
+        <nav class="flex items-center space-x-8">
           <a
             *hasRole="[Role.ADMIN, Role.USER]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
             routerLink="/home"
             >Home</a
           >
           <a
             *hasRole="[Role.ADMIN]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
             routerLink="/products"
             >Products</a
           >
           <a
             *hasRole="[Role.ADMIN, Role.USER]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
             routerLink="/categories"
             >Categories</a
           >
           <a
             *hasRole="[Role.ADMIN]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
-            routerLink="/admin/dashboard/layout"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
+            routerLink="/admin/dashboard/layout/dashboard-graph"
             >Dashboard</a
           >
           <a
-            *hasRole="[Role.USER]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
-            routerLink="/contact"
-            >Contact</a
-          >
-          <a
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
             routerLink="/about"
             >About</a
           >
           <a
-            *hasRole="[Role.ADMIN]"
-            class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+            *hasRole="[Role.ADMIN,Role.USER]"
+            class="text-sm font-medium hover:text-indigo-600 transition-colors duration-200"
             [routerLink]="['/profile', currentUser()?.id]"
             >Profile</a
           >
-        </div>
-        <div class="pt-4 pb-3 border-t border-gray-200">
-          <div class="flex items-center px-5 space-x-3">
-            <button
-              class="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+        </nav>
+      </div>
+
+      <!-- Acciones (Desktop) -->
+      <div class="items-center hidden gap-4 md:flex">
+        <button
+          class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-sm"
+        >
+          Sign Up
+        </button>
+        <button
+          class="px-4 py-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+          (click)="logout()"
+        >
+          Log Out
+        </button>
+
+        <!-- Dark Mode Toggle -->
+        <button
+          (click)="toggleDarkMode()"
+          class="p-2 rounded-full focus:outline-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-gray-800 dark:text-gray-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            @if(isDarkMode) {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+            } @else {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+            }
+          </svg>
+        </button>
+
+        <!-- Carrito -->
+        <div class="relative ml-4">
+          <button
+            (click)="toggleCart()"
+            class="relative flex items-center p-2 text-gray-700 dark:text-gray-200 hover:text-indigo-600"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              Sign Up
-            </button>
-            <button
-              class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-              (click)="logout()"
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <span
+              *ngIf="cartItemCount > 0"
+              class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform transition-all duration-300 hover:scale-110"
+              [class.animate-ping]="cartItemAdded"
             >
-              Log Out
-            </button>
+              {{ cartItemCount }}
+            </span>
+          </button>
+
+          <!-- Dropdown del carrito -->
+          <div
+            *ngIf="showCart"
+            class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-700 rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-600 divide-y divide-gray-200 dark:divide-gray-600"
+          >
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900">Shopping Cart</h3>
+              <div
+                *ngIf="cartItems.length === 0"
+                class="py-4 text-center text-gray-500"
+              >
+                Your cart is empty
+              </div>
+
+              <div *ngFor="let item of cartItems" class="py-3">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium text-gray-900 truncate">
+                      {{ item.name }}
+                    </h4>
+                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                      <span class="mr-2"
+                        >{{ item.quantity }} × {{ item.price | currency }}</span
+                      >
+                    </div>
+                  </div>
+                  <button
+                    (click)="removeItem(item.id)"
+                    class="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Loading State -->
+              <div *ngIf="loading" class="text-center">
+                <div class="inline-flex items-center justify-center">
+                  <svg
+                    class="animate-spin -ml-1 mr-3 h-8 w-8 text-indigo-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span class="text-lg font-medium text-gray-700"
+                    >Procesando tu pago...</span
+                  >
+                </div>
+              </div>
+              <div
+                *ngIf="cartItems.length > 0 && !loading"
+                class="pt-4 mt-3 border-t border-gray-200"
+              >
+                <div
+                  class="flex justify-between py-2 text-base font-medium text-gray-900"
+                >
+                  <span>Subtotal:</span>
+                  <span>{{ cartService.getTotalPrice() | currency }}</span>
+                </div>
+                <button
+                  class="w-full px-4 py-2 mt-3 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                  (click)="checkout()"
+                >
+                  Checkout
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Menú móvil -->
+      <button
+        class="p-2 text-gray-500 rounded-md md:hidden hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+        onclick="(() => { this.closest('.group').classList.toggle('open')})()"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
     </div>
-  </body>
-</html>
+
+    <!-- Menú móvil (oculto por defecto) -->
+    <div class="hidden md:hidden group-[.open]:block">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a
+          *hasRole="[Role.ADMIN, Role.USER]"
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          routerLink="/home"
+          >Home</a
+        >
+        <a
+          *hasRole="[Role.ADMIN]"
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          routerLink="/products"
+          >Products</a
+        >
+        <a
+          *hasRole="[Role.ADMIN, Role.USER]"
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          routerLink="/categories"
+          >Categories</a
+        >
+        <a
+          *hasRole="[Role.ADMIN]"
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          routerLink="/admin/dashboard/layout"
+          >Dashboard</a
+        >
+        <a
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          routerLink="/about"
+          >About</a
+        >
+        <a
+          *hasRole="[Role.ADMIN]"
+          class="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-indigo-600 hover:bg-gray-50"
+          [routerLink]="['/profile', currentUser()?.id]"
+          >Profile</a
+        >
+      </div>
+      <div class="pt-4 pb-3 border-t border-gray-200">
+        <div class="flex items-center px-5 space-x-3">
+          <button
+            class="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+          >
+            Sign Up
+          </button>
+          <button
+            class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            (click)="logout()"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
