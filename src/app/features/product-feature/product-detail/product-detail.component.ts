@@ -12,8 +12,10 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
 })
-export class ProductDetailComponent implements OnInit {
+export default class ProductDetailComponent implements OnInit {
   selectedProduct: Product;
+
+  // Inject Services
   router = inject(Router);
   private route = inject(ActivatedRoute);
   public productService = inject(ProductService);

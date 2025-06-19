@@ -15,9 +15,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../../../shared/common/components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { environment } from 'src/environments/environment.development';
-import { CartComponent } from '../../cart/cart.component';
 import { CartService } from '@shared/services/cart.service';
-import { CartItem } from '@features/cart/interfaces/cart-item.interface';
+import { CartItem } from '@features/orders/interfaces/cart-item.interface';
 
 @Component({
   selector: 'app-products',
@@ -38,9 +37,10 @@ import { CartItem } from '@features/cart/interfaces/cart-item.interface';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
-export class ProductsComponent implements OnInit {
+export default class ProductsComponent implements OnInit {
   selectedProduct!: Product;
 
+  // Inject Services
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   productService = inject(ProductService);

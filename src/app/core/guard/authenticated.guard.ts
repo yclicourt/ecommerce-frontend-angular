@@ -8,6 +8,8 @@ export const AuthGuard: CanMatchFn = (
   route,
   segments
 ): MaybeAsync<GuardResult> => {
+
+  // Inject Services
   const router = inject(Router);
 
   return inject(UserService).currentUser$.pipe(

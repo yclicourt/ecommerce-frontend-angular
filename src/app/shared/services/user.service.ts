@@ -27,6 +27,8 @@ export class UserService {
   private readonly API_URL = environment.apiUrl;
   private tokenKey = environment.tokenKey;
   private currentUser = environment.currentUser;
+
+  // Inject Services
   private http = inject(HttpClient);
   private router = inject(Router);
 

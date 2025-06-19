@@ -18,15 +18,14 @@ import { FooterComponent } from '@shared/common/components/footer/footer.compone
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit {
-
+export default class HomeComponent implements OnInit {
   // Inject Services
   productService = inject(ProductService);
   userService = inject(UserService);
   cartService = inject(CartService);
   router = inject(Router);
-
   private toastr = inject(ToastrService);
+
   CategoryName = CategoryName;
   productsByCategory: { [key in CategoryName]?: Product[] } = {};
   private API_URL = environment.apiUrl;

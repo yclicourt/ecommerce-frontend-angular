@@ -19,7 +19,9 @@ import { ForgotPasswordComponent } from "../forgot-password/forgot-password.comp
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export default class LoginComponent {
+
+  // Inject Services
   private router = inject(Router);
   private userService = inject(UserService);
   private toastr = inject(ToastrService);

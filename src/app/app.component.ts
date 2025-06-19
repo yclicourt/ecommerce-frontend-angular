@@ -11,6 +11,7 @@ import { DarkModeService } from '@shared/services/dark-mode.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+  // Inject Services
   private darkModeService = inject(DarkModeService);
 
   constructor() {

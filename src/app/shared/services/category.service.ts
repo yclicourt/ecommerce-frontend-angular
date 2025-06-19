@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 export class CategoryService {
   private API_URL = `${environment.apiUrl}/categories`;
 
+  //Inject services
   private http = inject(HttpClient);
   private userService = inject(UserService)
   constructor() {}

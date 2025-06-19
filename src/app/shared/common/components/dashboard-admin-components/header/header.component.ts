@@ -10,6 +10,8 @@ import { AuthService } from '@shared/services/auth.service';
   styleUrl: './header.component.css',
 })
 export default class HeaderDashboardComponent implements OnInit {
+
+  // Inject Services
   authService = inject(AuthService);
   ngOnInit(): void {}
 

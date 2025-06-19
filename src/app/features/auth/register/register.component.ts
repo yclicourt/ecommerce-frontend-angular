@@ -19,11 +19,14 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent {
+export default class RegisterComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
+
+  // Inject Services
   private userService = inject(UserService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
+
   registerForm: FormGroup;
   name: FormControl;
   lastname: FormControl;

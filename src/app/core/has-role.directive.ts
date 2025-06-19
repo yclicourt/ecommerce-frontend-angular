@@ -17,6 +17,8 @@ import { UserService } from '@shared/services/user.service';
 })
 export class HasRoleDirective {
   private templateRef = inject(TemplateRef);
+
+  // Inject Services
   private viewContainerRef = inject(ViewContainerRef);
   private userService = inject(UserService);
 

@@ -17,10 +17,11 @@ import { UserService } from '@shared/services/user.service';
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })
-export class ResetPasswordComponent {
+export default class ResetPasswordComponent {
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
 
+  // Inject Services
   userService = inject(UserService);
   snackBar = inject(MatSnackBar);
   route = inject(ActivatedRoute);

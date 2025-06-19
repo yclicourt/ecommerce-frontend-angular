@@ -6,16 +6,12 @@ import { RoleGuard } from 'src/app/core/guard/role-guard.guard';
 export default [
   {
     path: '',
-    loadComponent: () =>
-      import('./products/products.component').then((m) => m.ProductsComponent),
+    loadComponent: () => import('./products/products.component'),
     canActivate: [RoleGuard([Role.ADMIN])],
   },
   {
     path: ':id',
-    loadComponent: () =>
-      import('./product-detail/product-detail.component').then(
-        (m) => m.ProductDetailComponent
-      ),
+    loadComponent: () => import('./product-detail/product-detail.component'),
     canActivate: [RoleGuard([Role.ADMIN])],
   },
 ] as Routes;

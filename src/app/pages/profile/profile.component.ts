@@ -15,8 +15,8 @@ import { Chart } from 'chart.js/auto';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit {
-  // Injecting necessary services
+export default class ProfileComponent implements OnInit {
+  // Injecting services
   route = inject(ActivatedRoute);
   userService = inject(UserService);
   orderService = inject(OrderService);

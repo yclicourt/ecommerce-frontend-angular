@@ -18,6 +18,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard-graph.component.css',
 })
 export default class DashboardGraphComponent implements OnInit {
+
+  // Inject Services
   productService = inject(ProductService);
   userService = inject(UserService);
   orderService = inject(OrderService);
@@ -43,6 +45,7 @@ export default class DashboardGraphComponent implements OnInit {
     this.initializeData();
   }
 
+  // Method to initialize data
   private initializeData(): void {
     const products = this.productService.products;
     const users = this.userService.users;
