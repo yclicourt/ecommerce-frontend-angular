@@ -10,17 +10,21 @@ import {
 } from '@angular/forms';
 import { CommonModule, NgClass } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { ForgotPasswordComponent } from "../forgot-password/forgot-password.component";
+import ForgotPasswordComponent from '../forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, ForgotPasswordComponent,CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    NgClass,
+    ForgotPasswordComponent,
+    CommonModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export default class LoginComponent {
-
   // Inject Services
   private router = inject(Router);
   private userService = inject(UserService);
@@ -31,7 +35,7 @@ export default class LoginComponent {
   email: FormControl;
   password: FormControl;
 
-  showPasswordModal = false
+  showPasswordModal = false;
 
   constructor() {
     this.email = new FormControl('', [Validators.required, Validators.email]);
@@ -57,7 +61,7 @@ export default class LoginComponent {
 
         console.error('Login Error:', error);
         this.toastr.error(errorMessage);
-        this.router.navigateByUrl('/error')
+        this.router.navigateByUrl('/error');
       },
       complete: () => {
         this.accessForm.reset();
@@ -74,7 +78,7 @@ export default class LoginComponent {
   openPasswordModal(event: Event) {
     event.preventDefault();
     this.showPasswordModal = true;
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
   }
 
   // Method to close modal for forgot password
@@ -83,7 +87,7 @@ export default class LoginComponent {
     document.body.style.overflow = 'auto'; // Habilita el scroll
   }
 
-// Method to handle errors in the form
+  // Method to handle errors in the form
   hasErrors(field: string, typeError: string) {
     return (
       this.accessForm.get(field)?.hasError(typeError) &&
