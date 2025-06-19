@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SpinnerComponent } from "@components/spinner/spinner.component";
+import { SpinnerComponent } from '@components/spinner/spinner.component';
+import { DarkModeService } from '@shared/services/dark-mode.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,10 @@ import { SpinnerComponent } from "@components/spinner/spinner.component";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {}
+export class AppComponent {
+  private darkModeService = inject(DarkModeService);
+
+  constructor() {
+    this.darkModeService.isDarkMode();
+  }
+}
