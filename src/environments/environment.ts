@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: '',
-  clientUrl:'',
-  brandName:'',
-  tokenKey: '',
-  currentUser: '',
-  PAYPAL_API: '',
+  apiUrl: 'https://ecommerce-backend-p1qn.onrender.com/api/v1',
+  clientUrl:'https://ecommerce-frontend-angular-iota.vercel.app/',
+  brandName:'Ecommerce Yoyo Shop',
+  tokenKey: 'TxZViuOEdrPEmbY9gSreAFtA0PaW6LwVlAVVXMaepxVGbFSDPw6Gmg4SITplXFEQ',
+  currentUser: 'currentUser',
+  PAYPAL_API: 'https://api-m.sandbox.paypal.com',
 };
