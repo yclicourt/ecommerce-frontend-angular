@@ -1,10 +1,10 @@
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { Product } from '@features/product-feature/interfaces/Product';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { Router } from '@angular/router';
 
 @Component({

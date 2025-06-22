@@ -17,7 +17,7 @@ import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.in
 import { Router } from '@angular/router';
 import { Role } from '../../features/auth/enums/role.enum';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { Status } from '@features/auth/enums/status.enum';
 
 @Injectable({

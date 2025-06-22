@@ -7,7 +7,7 @@ import { MonthlyRevenue } from '@features/orders/interfaces/monthly-revenue.inte
 import { OrderStats } from '@features/orders/interfaces/order-stast.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 
 @Injectable({
   providedIn: 'root',

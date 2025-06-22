@@ -3,10 +3,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Status } from '@features/auth/enums/status.enum';
 import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import {
   combineLatest,
-  combineLatestWith,
   debounceTime,
   distinctUntilChanged,
   firstValueFrom,
@@ -14,7 +13,6 @@ import {
   Observable,
   startWith,
   Subject,
-  takeUntil,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';

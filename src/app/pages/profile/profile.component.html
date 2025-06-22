@@ -132,7 +132,7 @@
     </div>
 
     <div
-      class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4"
+      class="my-4 flex flex-col gap-4 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4"
     >
       <div class="w-full flex flex-col 2xl:w-1/3">
         <div
@@ -354,20 +354,6 @@
               </div>
             </div>
           </div>
-
-          <div class="mt-4">
-            <canvas
-              id="verticalBarChart"
-              style="
-                display: block;
-                box-sizing: border-box;
-                height: 414px;
-                width: 828px;
-              "
-              width="1656"
-              height="828"
-            ></canvas>
-          </div>
         </div>
       </div>
     </div>
@@ -393,58 +379,3 @@
     </button>
   </main>
 </div>
-
-<script>
-  const DATA_SET_VERTICAL_BAR_CHART_1 = [
-    68.106, 26.762, 94.255, 72.021, 74.082, 64.923, 85.565, 32.432, 54.664,
-    87.654, 43.013, 91.443,
-  ];
-
-  const labels_vertical_bar_chart = [
-    "January",
-    "February",
-    "Mart",
-    "April",
-    "May",
-    "Jun",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const dataVerticalBarChart = {
-    labels: labels_vertical_bar_chart,
-    datasets: [
-      {
-        label: "Revenue",
-        data: DATA_SET_VERTICAL_BAR_CHART_1,
-        borderColor: "rgb(54, 162, 235)",
-        backgroundColor: "rgba(54, 162, 235, 0.5)",
-      },
-    ],
-  };
-  const configVerticalBarChart = {
-    type: "bar",
-    data: dataVerticalBarChart,
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top",
-        },
-        title: {
-          display: true,
-          text: "Last 12 Months",
-        },
-      },
-    },
-  };
-
-  var verticalBarChart = new Chart(
-    document.getElementById("verticalBarChart"),
-    configVerticalBarChart
-  );
-</script>

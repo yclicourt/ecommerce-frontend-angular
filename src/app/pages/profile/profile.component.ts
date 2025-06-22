@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
 import { HeaderComponent } from '../../shared/common/components/header/header.component';
 import { CommonModule } from '@angular/common';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { OrderService } from '@shared/services/order.service';
-import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-profile',
@@ -39,7 +38,7 @@ export default class ProfileComponent implements OnInit {
       this.userService.getUser(param['id']).subscribe((data: User) => {
         this.profileData = {
           ...data,
-          avatar: data.avatar ? `${this.API_URL}${data.avatar}` : 'avatar.svg',
+          avatar: data.avatar ? `${this.API_URL}${data.avatar}` : '/avatar.svg',
         };
       });
     });
@@ -51,12 +50,13 @@ export default class ProfileComponent implements OnInit {
       const requestedUserId = +params['id'];
 
       // Si no hay ID en la ruta, usar el del usuario logueado
+      // If not exists id in route, get a user logged
       if (!requestedUserId && loggedInUserId) {
         this.currentUserId = loggedInUserId;
       }
       // Si hay ID en la ruta, verificar permisos
+      // If exists id in route, verify permissions
       else if (requestedUserId) {
-        // Aquí puedes añadir lógica para verificar si el usuario puede ver este perfil
         this.currentUserId = requestedUserId;
       }
 
@@ -92,9 +92,7 @@ export default class ProfileComponent implements OnInit {
 
   // Methods to load profile and stats data
   loadProfileData() {
-    this.userService.getUser(this.currentUserId!).subscribe((data) => {
-      this.profileData = data;
-    });
+    this.userService.getUser(this.currentUserId!).subscribe((data) => {});
   }
 
   // Method to load stats and monthly revenue data
@@ -107,45 +105,6 @@ export default class ProfileComponent implements OnInit {
       .getMonthlyRevenue(this.currentUserId!)
       .subscribe((revenue) => {
         this.monthlyRevenue = revenue;
-        this.initChart();
       });
-  }
-
-  // Method to initialize the chart
-  initChart() {
-    const labels = this.monthlyRevenue.map((item) => item.month);
-    const data = this.monthlyRevenue.map((item) => item.revenue);
-
-    const dataVerticalBarChart = {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Revenue',
-          data: data,
-          borderColor: 'rgb(54, 162, 235)',
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        },
-      ],
-    };
-
-    new Chart(
-      document.getElementById('verticalBarChart') as HTMLCanvasElement,
-      {
-        type: 'bar',
-        data: dataVerticalBarChart,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Last 12 Months',
-            },
-          },
-        },
-      }
-    );
   }
 }

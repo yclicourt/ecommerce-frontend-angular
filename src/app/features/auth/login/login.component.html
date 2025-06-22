@@ -2,7 +2,7 @@
   class="bg-gray-300 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-300 bottom-0 leading-5 h-full w-full overflow-hidden"
 ></div>
 <form
-  class="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl"
+  class="form-container relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl"
   [formGroup]="accessForm"
 >
   <div class="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
@@ -19,17 +19,15 @@
         <h3 class="font-semibold text-2xl text-gray-800">Sign In</h3>
         <p class="text-gray-400">
           Don'thave an account?
-          <a
-            href="register"
-            class="text-sm text-gray-800 hover:text-gray-600"
+          <a href="register" class="text-sm text-gray-800 hover:text-gray-600"
             >Sign Up</a
           >
         </p>
       </div>
       <div class="space-y-6">
-        <div class="">
+        <div class="custom-input-wrapper">
           <input
-            class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
+            class="custom-input w-full text-sm p-2 mb-2 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
             type="email"
             placeholder="Email"
             formControlName="email"
@@ -40,24 +38,27 @@
           />
           @if (hasErrors('email','required')) {
 
-          <span class="text-red-500 font-sans"
+          <span class="error-text text-red-500 font-sans"
             >"Email should not be empty"</span
           >
           } @if (hasErrors('email','email')){
 
-          <span class="text-red-500 font-sans">Invalid email format</span>
+          <span class="error-text text-red-500 font-sans"
+            >Invalid email format</span
+          >
           }
         </div>
 
-        <div class="relative" x-data="{ show: true }">
+        <div class="relative custom-input-wrapper">
           <input
             placeholder="Password"
             type="password"
             formControlName="password"
+            autocomplete="current-password"
             style="color: black"
-            class="text-sm text-gray-200 px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400"
+            class="custom-input text-sm text-gray-200 p-4 mb-2 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400"
             [ngClass]="{
-              'is-invalid':
+              'is-invalid ':
                 hasErrors('message', 'required') ||
                 hasErrors('message', 'minlength')
             }"
@@ -67,18 +68,18 @@
           ></div>
           @if (hasErrors('password','required')) {
 
-          <span class="text-red-500 font-sans"
+          <span class="error-text text-red-500 font-sans"
             >Password should not be empty</span
           >
           } @if (hasErrors('password','minlength')){
 
-          <span class="text-red-500 font-sans"
+          <span class="error-text text-red-500 font-sans"
             >"Password must be longer than or equal to 6 characters"</span
           >
           }
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex items-center mb-2 justify-between">
           <div class="text-sm ml-auto">
             <a
               href="#"
@@ -89,8 +90,39 @@
             </a>
           </div>
         </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="text-center">
+          <div class="inline-flex items-center justify-center">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-8 w-8 text-indigo-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span class="text-lg font-medium text-gray-700"
+              >Signing in...</span
+            >
+          </div>
+        </div>
+
         <div>
           <button
+            *ngIf="!loading"
             type="submit"
             (click)="login()"
             class="w-full flex justify-center bg-gray-800 hover:bg-gray-600 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"

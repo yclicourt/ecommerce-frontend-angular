@@ -3,7 +3,7 @@ import { ProductService } from '@shared/services/product.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Product } from '../interfaces/Product';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductFormComponent } from '@components/product-form/product-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,9 +14,8 @@ import { UserService } from '@shared/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../../../shared/common/components/header/header.component';
 import { CommonModule } from '@angular/common';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { CartService } from '@shared/services/cart.service';
-import { CartItem } from '@features/orders/interfaces/cart-item.interface';
 
 @Component({
   selector: 'app-products',

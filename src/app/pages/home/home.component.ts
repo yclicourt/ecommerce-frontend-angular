@@ -1,4 +1,4 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CategoryName } from '@components/product-form/enums/category-name.enum';
 import { HeaderComponent } from '@shared/common/components/header/header.component';
@@ -7,7 +7,7 @@ import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '@features/product-feature/interfaces/Product';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { Router } from '@angular/router';
 import { FooterComponent } from '@shared/common/components/footer/footer.component';
 

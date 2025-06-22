@@ -6,7 +6,7 @@ import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { ProductModalUpdatedComponent } from '../../shared/common/components/dashboard-admin-components/product-modal-updated/product-modal-updated.component';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { Router } from '@angular/router';
 
 @Component({

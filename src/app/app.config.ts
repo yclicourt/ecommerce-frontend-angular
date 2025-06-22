@@ -8,7 +8,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { SpinnerInterceptor } from '@shared/interceptors/spinner.interceptor';
 import { JwtInterceptor } from '@shared/interceptors/jwt-interceptor.interceptor';
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),

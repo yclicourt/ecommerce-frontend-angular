@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Order } from './interfaces/order.interface';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderService } from '@shared/services/order.service';
 import { CartService } from '@shared/services/cart.service';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { CaptureOrderResponse } from './interfaces/capture-order.interface';
 

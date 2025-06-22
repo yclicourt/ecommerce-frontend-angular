@@ -3,7 +3,6 @@ import { OrderService } from '@shared/services/order.service';
 import { ProductService } from '@shared/services/product.service';
 import { UserService } from '@shared/services/user.service';
 import { StatCardComponent } from '../../shared/common/components/dashboard-admin-components/stat-card/stat-card.component';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { User } from '@features/auth/interfaces/register.interface';

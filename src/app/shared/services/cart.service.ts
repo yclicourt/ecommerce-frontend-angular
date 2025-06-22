@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CartItem } from '@features/orders/interfaces/cart-item.interface';
-import { Cart } from '@features/orders/interfaces/cart.interface';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '@envs/environment';
 import { ProductService } from './product.service';
 import { Product } from '@features/product-feature/interfaces/Product';
 

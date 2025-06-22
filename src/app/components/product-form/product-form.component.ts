@@ -1,10 +1,8 @@
 import {
   Component,
-  EventEmitter,
   inject,
   Input,
   OnInit,
-  Output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -17,11 +15,10 @@ import {
 import { ProductService } from '@shared/services/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '@shared/services/user.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Product } from '@features/product-feature/interfaces/Product';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from '@envs/environment';
 import { Category } from '@features/product-feature/interfaces/category.interface';
 import { CategoryService } from '@shared/services/category.service';
 import { CategoryName } from './enums/category-name.enum';

@@ -36,6 +36,7 @@ export default class LoginComponent {
   password: FormControl;
 
   showPasswordModal = false;
+  loading = false;
 
   constructor() {
     this.email = new FormControl('', [Validators.required, Validators.email]);
@@ -48,6 +49,7 @@ export default class LoginComponent {
 
   // Method login to authenticate the user
   login(): void {
+    this.loading = true;
     this.userService.loginUser(this.accessForm.value).subscribe({
       next: (response) => {
         if (response) {
@@ -60,6 +62,7 @@ export default class LoginComponent {
           error.error?.message || error.message || 'Login Error';
 
         console.error('Login Error:', error);
+        this.loading = false;
         this.toastr.error(errorMessage);
         this.router.navigateByUrl('/error');
       },
