@@ -38,7 +38,7 @@ export default class ProfileComponent implements OnInit {
       this.userService.getUser(param['id']).subscribe((data: User) => {
         this.profileData = {
           ...data,
-          avatar: data.avatar ? `${this.API_URL}${data.avatar}` : '/avatar.svg',
+          avatar:data.avatar
         };
       });
     });

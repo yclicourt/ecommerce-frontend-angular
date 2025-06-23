@@ -353,13 +353,10 @@ export default class ProfileDashboardComponent implements OnInit {
     if (!avatarPath) {
       return '/avatar.svg';
     }
-
-    console.log(avatarPath)
+  
     const isExternalUrl =
-      avatarPath.startsWith('http://') || avatarPath.startsWith('https://');
-    return isExternalUrl
-      ? avatarPath // In production, use Cloudinary base URL + path
-      : `${environment.apiUrl}${avatarPath}`; // In development, use apiUrl to serve from uploads folder
+      avatarPath.startsWith('http') || avatarPath.startsWith('https');
+    return isExternalUrl ? avatarPath : `${environment.apiUrl}${avatarPath}`;
   }
 
   // Handler for error
