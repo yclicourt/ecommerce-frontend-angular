@@ -6,4 +6,5 @@ export const environment = {
   tokenKey: 'TxZViuOEdrPEmbY9gSreAFtA0PaW6LwVlAVVXMaepxVGbFSDPw6Gmg4SITplXFEQ',
   currentUser: 'currentUser',
   PAYPAL_API: 'https://api-m.sandbox.paypal.com',
+  cloudinaryBaseUrl:'https://res.cloudinary.com/dzuzh8nzz/image/upload/'
 };

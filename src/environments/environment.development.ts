@@ -6,4 +6,5 @@ export const environment = {
   tokenKey: 'tokenKey',
   currentUser: 'currentUser',
   PAYPAL_API: 'https://api-m.sandbox.paypal.com',
+  cloudinaryBaseUrl:''
 };

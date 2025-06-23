@@ -28,12 +28,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './profile-dashboard.component.css',
 })
 export default class ProfileDashboardComponent implements OnInit {
-
   // Inject Services
   userService = inject(UserService);
   toastr = inject(ToastrService);
   router = inject(Router);
-  
+
   private http = inject(HttpClient);
   private readonly API_URL = environment.apiUrl;
 
@@ -90,7 +89,9 @@ export default class ProfileDashboardComponent implements OnInit {
   // Method to get all profiles on dashboard
   getUsersDashboard() {
     this.userService.getAllUsers().subscribe({
-      next: (data) => {},
+      next: (data) => {
+        console.log(data);
+      },
       error: (e) => {
         console.log(e);
       },
@@ -352,6 +353,16 @@ export default class ProfileDashboardComponent implements OnInit {
     if (!avatarPath) {
       return '/avatar.svg';
     }
+
+    if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
+      return avatarPath;
+    }
+
+    // In production, use Cloudinary base URL + path
+    if (environment.production) {
+      return `${environment.cloudinaryBaseUrl}/${avatarPath}`;
+    }
+    // In development, use apiUrl to serve from uploads folder
     return `${environment.apiUrl}${avatarPath}`;
   }
 
