@@ -64,6 +64,10 @@ export class UserService {
   registerUser(formData: FormData): Observable<User> {
     return this.http.post<User>(`${this.API_URL}/auth/register`, formData);
   }
+  // Method to register the user admin
+  registerAdminUser(formData: FormData): Observable<User> {
+    return this.http.post<User>(`${this.API_URL}/auth/register/admin`, formData);
+  }
 
   // Method to login the user
   loginUser(loginUser: Login): Observable<ResponseAccess> {

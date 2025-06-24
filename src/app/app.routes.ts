@@ -73,6 +73,11 @@ export const routes: Routes = [
     canActivate: [RoleGuard([Role.ADMIN])],
   },
   {
+    path: 'admin/register',
+    loadComponent: () =>
+      import('@features/auth/register-admin/register-admin.component'),
+  },
+  {
     path: 'not-found',
     loadComponent: () =>
       import('@shared/common/components/not-found/not-found.component'),
