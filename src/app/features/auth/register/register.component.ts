@@ -7,20 +7,20 @@ import {
 } from '@angular/forms';
 import { UserService } from '@shared/services/user.service';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass,CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export default class RegisterComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
+  loading = false;
 
   // Inject Services
   private userService = inject(UserService);
@@ -67,6 +67,7 @@ export default class RegisterComponent {
 
   // Method to register a user
   async register() {
+    this.loading = true;
     if (this.registerForm.valid) {
       const formData = new FormData();
 
@@ -90,6 +91,7 @@ export default class RegisterComponent {
 
         this.registerForm.reset();
       } catch (error: any) {
+        this.loading = false;
         console.error('Registration error:', error);
         this.toastr.error(error.error?.message || 'Registration failed');
       }
