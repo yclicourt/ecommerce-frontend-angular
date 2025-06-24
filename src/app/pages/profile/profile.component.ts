@@ -49,12 +49,10 @@ export default class ProfileComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const requestedUserId = +params['id'];
 
-      // Si no hay ID en la ruta, usar el del usuario logueado
       // If not exists id in route, get a user logged
       if (!requestedUserId && loggedInUserId) {
         this.currentUserId = loggedInUserId;
       }
-      // Si hay ID en la ruta, verificar permisos
       // If exists id in route, verify permissions
       else if (requestedUserId) {
         this.currentUserId = requestedUserId;
