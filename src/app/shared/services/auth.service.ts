@@ -4,17 +4,15 @@ import { BehaviorSubject } from 'rxjs';
 import { Status } from '@features/auth/enums/status.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  Status= Status
+  Status = Status;
 
   // Inject services
-  userService = inject(UserService)
-
+  userService = inject(UserService);
 
   initialize(): void {
     const isAuthenticated = this.userService.isAuthenticated();
@@ -26,19 +24,19 @@ export class AuthService {
     this.isAuthenticatedSubject.next(true);
   }
 
-  // Method to logout 
+  // Method to logout
   logout(): void {
     const currentUserId = this.userService.getCurrentUserId();
     if (currentUserId) {
-      this.userService.updateUserStatusInBackend(currentUserId, Status.INACTIVE)
+      this.userService
+        .updateUserStatusInBackend(currentUserId, Status.OFFLINE)
         .subscribe({
           next: () => {
             this.performLogout();
           },
-          error: (err: any) => {
-            console.error('Error updating user status:', err);
+          error: () => {
             this.performLogout();
-          }
+          },
         });
     } else {
       this.performLogout();

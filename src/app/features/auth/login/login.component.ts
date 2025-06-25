@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -11,6 +10,8 @@ import {
 import { CommonModule, NgClass } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import ForgotPasswordComponent from '../forgot-password/forgot-password.component';
+import { catchError, filter, finalize, of, switchMap, take, tap } from 'rxjs';
+import { Status } from '../enums/status.enum';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,7 @@ export default class LoginComponent {
   private router = inject(Router);
   private userService = inject(UserService);
   private toastr = inject(ToastrService);
+  Status!: Status;
 
   accessForm!: FormGroup;
 
@@ -50,26 +52,30 @@ export default class LoginComponent {
   // Method login to authenticate the user
   login(): void {
     this.loading = true;
-    this.userService.loginUser(this.accessForm.value).subscribe({
-      next: (response) => {
-        if (response) {
-          this.accessForm.reset();
-          this.router.navigate(['/home']);
-        }
-      },
-      error: (error) => {
-        const errorMessage =
-          error.error?.message || error.message || 'Login Error';
 
-        console.error('Login Error:', error);
-        this.loading = false;
-        this.toastr.error(errorMessage);
-        this.router.navigateByUrl('/error');
-      },
-      complete: () => {
-        this.accessForm.reset();
-      },
-    });
+    this.userService
+      .loginUser(this.accessForm.value)
+      .pipe(
+        switchMap(() => this.userService.currentUser$),
+        filter((user) => !!user),
+        take(1),
+        tap((user) => {
+          console.log('💡 Usuario cargado:', user);
+          if (user.status === Status.ACTIVE) {
+            this.router.navigate(['/home']);
+          } else {
+            this.toastr.error('Inactive User');
+            this.router.navigateByUrl('/error');
+          }
+        }),
+        finalize(() => (this.loading = false)),
+        catchError((err) => {
+          console.error(err);
+          this.toastr.error('Login Error');
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   // Method to navigate to the register page

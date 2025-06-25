@@ -89,9 +89,7 @@ export default class ProfileDashboardComponent implements OnInit {
   // Method to get all profiles on dashboard
   getUsersDashboard() {
     this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        console.log(data);
-      },
+      next: (data) => {},
       error: (e) => {
         console.log(e);
       },
@@ -324,8 +322,6 @@ export default class ProfileDashboardComponent implements OnInit {
           avatar: updatedUser.avatar,
         };
       }
-
-      console.log(updateData);
       const updateResponse = await firstValueFrom(
         this.userService.updateUser(updateData, this.selectedUser.id, token)
       );
@@ -353,7 +349,7 @@ export default class ProfileDashboardComponent implements OnInit {
     if (!avatarPath) {
       return '/avatar.svg';
     }
-  
+
     const isExternalUrl =
       avatarPath.startsWith('http') || avatarPath.startsWith('https');
     return isExternalUrl ? avatarPath : `${environment.apiUrl}${avatarPath}`;

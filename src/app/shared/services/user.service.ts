@@ -11,6 +11,7 @@ import {
   from,
   mergeMap,
   toArray,
+  shareReplay,
 } from 'rxjs';
 import { Login } from '../../features/auth/interfaces/login.interface';
 import { ResponseAccess } from '../../features/auth/interfaces/responseAccess.interface';
@@ -66,7 +67,10 @@ export class UserService {
   }
   // Method to register the user admin
   registerAdminUser(formData: FormData): Observable<User> {
-    return this.http.post<User>(`${this.API_URL}/auth/register/admin`, formData);
+    return this.http.post<User>(
+      `${this.API_URL}/auth/register/admin`,
+      formData
+    );
   }
 
   // Method to login the user
@@ -74,10 +78,14 @@ export class UserService {
     return this.http
       .post<ResponseAccess>(`${this.API_URL}/auth/login`, loginUser)
       .pipe(
-        delay(150),
         tap((response) => {
-          if (response && response.user.status === Status.ACTIVE) {
+          if (
+            response &&
+            (response.user.status === Status.ACTIVE ||
+              response.user.status === Status.OFFLINE)
+          ) {
             this.setToken(response.token);
+            response.user.status = Status.ACTIVE; // forzamos a ACTIVE
             this._currentUserSubject.next(response.user);
             this.saveUser(response.user);
           } else {
@@ -85,6 +93,7 @@ export class UserService {
             throw new Error('Invalid login');
           }
         }),
+        shareReplay(1),
         catchError((error) => {
           this.handleFailedLogin();
           return throwError(() => error);
@@ -289,7 +298,9 @@ export class UserService {
 
   // Method to save the user in local storage
   private saveUser(user: User): void {
+    console.log('💾 saveUser(): Guardando en localStorage y haciendo next');
     localStorage.setItem(this.currentUser, JSON.stringify(user));
+    this._currentUserSubject.next(user);
   }
 
   // Method to get the token from local storage
@@ -322,6 +333,7 @@ export class UserService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.currentUser);
+    this._currentUserSubject.next(null);
     this.router.navigateByUrl('/login');
   }
 
