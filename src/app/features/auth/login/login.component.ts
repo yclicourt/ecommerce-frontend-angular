@@ -60,7 +60,6 @@ export default class LoginComponent {
         filter((user) => !!user),
         take(1),
         tap((user) => {
-          console.log('💡 Usuario cargado:', user);
           if (user.status === Status.ACTIVE) {
             this.router.navigate(['/home']);
           } else {

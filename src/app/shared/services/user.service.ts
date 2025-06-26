@@ -298,7 +298,6 @@ export class UserService {
 
   // Method to save the user in local storage
   private saveUser(user: User): void {
-    console.log('💾 saveUser(): Guardando en localStorage y haciendo next');
     localStorage.setItem(this.currentUser, JSON.stringify(user));
     this._currentUserSubject.next(user);
   }

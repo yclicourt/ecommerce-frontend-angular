@@ -211,3 +211,18 @@ button.toast-close-button {
     width: 25em;
   }
 }
+
+@layer utilities {
+  @keyframes slide-side {
+    0%, 100% {
+      transform: translateX(0%);
+    }
+    50% {
+      transform: translateX(20%);
+    }
+  }
+
+  .animate-slide-side {
+    animation: slide-side 3s ease-in-out infinite;
+  }
+}

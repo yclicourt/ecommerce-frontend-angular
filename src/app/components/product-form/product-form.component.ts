@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   inject,
   Input,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   FormControl,
@@ -50,8 +52,8 @@ export class ProductFormComponent implements OnInit {
   currentProductId: number | undefined;
   imageFile: File | null = null;
   currentImageUrl: string | null = null;
-
   @Input() productToEdit: Product | null = null;
+  @ViewChild('imageInput') imageInputRef!: ElementRef<HTMLInputElement>;
 
   private API_URL = environment.apiUrl;
 
@@ -60,7 +62,7 @@ export class ProductFormComponent implements OnInit {
   private toastr = inject(ToastrService);
   private userService = inject(UserService);
   private categoriesService = inject(CategoryService);
-  private router = inject(Router)
+  private router = inject(Router);
 
   constructor() {
     this.name = new FormControl('', Validators.required);
@@ -150,7 +152,7 @@ export class ProductFormComponent implements OnInit {
       } catch (error: any) {
         console.error('Create Product error:', error);
         this.toastr.error(error.error?.message || 'Registration failed');
-        this.router.navigateByUrl('/error')
+        this.router.navigateByUrl('/error');
       }
     } else {
       this.toastr.warning('Please fill all required fields correctly');
@@ -240,6 +242,10 @@ export class ProductFormComponent implements OnInit {
     this.isEditMode = false;
     this.currentProductId = undefined;
     this.productForm.reset();
+    this.imageFile = null;
+    this.currentImageUrl = null;
+    this.selectedCategories = [];
+    this.imageInputRef.nativeElement.value = '';
   }
 
   // Method to update product
@@ -333,7 +339,7 @@ export class ProductFormComponent implements OnInit {
           this.toastr.error('Forbidden');
         } else {
           this.toastr.error(error.error?.message || 'Error updating product');
-          this.router.navigateByUrl('/error')
+          this.router.navigateByUrl('/error');
         }
       }
     } else {

@@ -16,6 +16,7 @@ import { HeaderComponent } from '../../../shared/common/components/header/header
 import { CommonModule } from '@angular/common';
 import { environment } from '@envs/environment';
 import { CartService } from '@shared/services/cart.service';
+import { SpinnerComponent } from "../../../components/spinner/spinner.component";
 
 @Component({
   selector: 'app-products',
@@ -32,7 +33,8 @@ import { CartService } from '@shared/services/cart.service';
     HeaderComponent,
     MatIconModule,
     CommonModule,
-  ],
+    SpinnerComponent
+],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })

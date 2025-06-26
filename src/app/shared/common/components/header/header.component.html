@@ -143,10 +143,10 @@
               <div *ngFor="let item of cartItems" class="py-3">
                 <div class="flex items-start justify-between">
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-sm font-medium text-gray-900 truncate">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-gray-300 truncate">
                       {{ item.name }}
                     </h4>
-                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                    <div class="flex items-center mt-1 text-sm text-gray-500 dark:text-gray-300">
                       <span class="mr-2"
                         >{{ item.quantity }} × {{ item.price | currency }}</span
                       >
@@ -197,7 +197,7 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <span class="text-lg font-medium text-gray-700"
+                  <span class="text-lg font-medium text-gray-700 dark:text-gray-300"
                     >Procesando tu pago...</span
                   >
                 </div>
@@ -207,7 +207,7 @@
                 class="pt-4 mt-3 border-t border-gray-200"
               >
                 <div
-                  class="flex justify-between py-2 text-base font-medium text-gray-900"
+                  class="flex justify-between py-2 text-base font-medium text-gray-900 dark:text-gray-300"
                 >
                   <span>Subtotal:</span>
                   <span>{{ cartService.getTotalPrice() | currency }}</span>

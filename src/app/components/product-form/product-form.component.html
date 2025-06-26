@@ -1,4 +1,4 @@
-<div class="max-w-xl mt-8 mx-auto">
+<div class="max-w-xl mt-8 mx-auto ml-2 mr-20">
   <form [formGroup]="productForm">
     <fieldset>
       <label for="product-name" class="dark:text-white">Product Name:</label>
@@ -14,7 +14,9 @@
       }
     </fieldset>
     <fieldset>
-      <label for="product-description" class="dark:text-white">Product Description:</label>
+      <label for="product-description" class="dark:text-white"
+        >Product Description:</label
+      >
       <textarea
         name="product-description"
         placeholder="Product Description"
@@ -26,7 +28,7 @@
       }
     </fieldset>
     <fieldset>
-      <label for="product-price" class="dark:text-white" >Product Price:</label>
+      <label for="product-price" class="dark:text-white">Product Price:</label>
       <input
         type="number"
         id="product-price"
@@ -47,6 +49,7 @@
         class="bg-gray-200 p-3 rounded-lg block w-full mb-3"
         (change)="onFileChanges($event)"
         accept="image/*"
+        #imageInput
       />
     </fieldset>
     <fieldset>
@@ -125,3 +128,4 @@
     </button>
   </form>
 </div>
+
